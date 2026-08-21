@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>硒瓜计算器 · 三主题 · GPL-3.0</title>
+    <style>
+        /* ============================================================
+           1. CSS 变量（三套主题 × 两种模式）
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Segoe UI', Roboto, system-ui, 'Helvetica Neue', sans-serif;
+        }
+
+        /* ----- 黑板 · 深色（默认） ----- */
+        [data-theme="blackboard"][data-mode="dark"] {
+            --bg-body: #2b3a4a;
+            --bg-panel-dark: #2d3e4f;
+            --bg-panel-light: #1e2b36;
+            --bg-display: #1e2b36;
+            --text-primary: #ffffff;
+            --text-secondary: #8ab4d6;
+            --text-muted: #5a7a8a;
+            --accent: #f39c12;
+            --accent-hover: #e0a830;
+            --btn-bg: #3a5066;
+            --btn-shadow: rgba(0,0,0,0.3);
+            --border-color: #3a5066;
+            --divider-bg: #3a5066;
+            --calendar-today: #f39c12;
+            --calendar-selected: #27ae60;
+            --tab-bg: #2d3e4f;
+            --tab-text: #8ab4d6;
+            --tab-active: white;
+            --tab-border: #f39c12;
+            --dialog-bg: #2d3e4f;
+            --dialog-text: white;
+            --dialog-border: #f39c12;
+            --btn-func-bg: #e67e22;
+            --btn-op-bg: #f39c12;
+            --btn-eq-bg: #27ae60;
+            --btn-op-text: #1e2b36;
+            --scrollbar-track: #1a2630;
+            --scrollbar-thumb: #f39c12;
+            --mobile-nav-bg: #2d3e4f;
+            --mobile-nav-border: #f39c12;
+            --mobile-nav-text: white;
+            --mobile-nav-active-bg: #f39c12;
+            --mobile-nav-active-text: #1e2b36;
+            --backdrop-blur: none;
+            --panel-shadow: none;
+            --panel-border: none;
+            --display-border: none;
+            --btn-border: none;
+            --dialog-blur: none;
+            --glass-edge: none;
+            --glass-inset: none;
+        }
+
+        /* 黑板 · 浅色 */
+        [data-theme="blackboard"][data-mode="light"] {
+            --bg-body: #e8ecf1;
+            --bg-panel-dark: #f0f2f5;
+            --bg-panel-light: #ffffff;
+            --bg-display: #ffffff;
+            --text-primary: #222222;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent: #f39c12;
+            --accent-hover: #d4a017;
+            --btn-bg: #d0d7de;
+            --btn-shadow: rgba(0,0,0,0.1);
+            --border-color: #c0c8d0;
+            --divider-bg: #c0c8d0;
+            --calendar-today: #f39c12;
+            --calendar-selected: #27ae60;
+            --tab-bg: #f0f2f5;
+            --tab-text: #555555;
+            --tab-active: #222222;
+            --tab-border: #f39c12;
+            --dialog-bg: #ffffff;
+            --dialog-text: #222222;
+            --dialog-border: #f39c12;
+            --btn-func-bg: #e67e22;
+            --btn-op-bg: #f39c12;
+            --btn-eq-bg: #27ae60;
+            --btn-op-text: #ffffff;
+            --scrollbar-track: #d0d7de;
+            --scrollbar-thumb: #f39c12;
+            --mobile-nav-bg: #f0f2f5;
+            --mobile-nav-border: #f39c12;
+            --mobile-nav-text: #222222;
+            --mobile-nav-active-bg: #f39c12;
+            --mobile-nav-active-text: #ffffff;
+            --backdrop-blur: none;
+            --panel-shadow: none;
+            --panel-border: none;
+            --display-border: none;
+            --btn-border: none;
+            --dialog-blur: none;
+            --glass-edge: none;
+            --glass-inset: none;
+        }
+
+        /* ----- 酷黑 · 深色 ----- */
+        [data-theme="coolblack"][data-mode="dark"] {
+            --bg-body: #1a1a1a;
+            --bg-panel-dark: rgba(28, 28, 28, 0.85);
+            --bg-panel-light: rgba(20, 20, 20, 0.75);
+            --bg-display: rgba(10, 10, 10, 0.5);
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #707070;
+            --accent: #60b0f4;
+            --accent-hover: #4a9ad9;
+            --btn-bg: rgba(60, 60, 60, 0.5);
+            --btn-shadow: rgba(0,0,0,0.3);
+            --border-color: rgba(255,255,255,0.1);
+            --divider-bg: rgba(255,255,255,0.08);
+            --calendar-today: #60b0f4;
+            --calendar-selected: #4caf50;
+            --tab-bg: rgba(30, 30, 30, 0.7);
+            --tab-text: #b0b0b0;
+            --tab-active: #f0f0f0;
+            --tab-border: #60b0f4;
+            --dialog-bg: rgba(30, 30, 30, 0.9);
+            --dialog-text: #f0f0f0;
+            --dialog-border: #60b0f4;
+            --btn-func-bg: #d9735b;
+            --btn-op-bg: #60b0f4;
+            --btn-eq-bg: #4caf50;
+            --btn-op-text: #1a1a1a;
+            --scrollbar-track: rgba(60,60,60,0.3);
+            --scrollbar-thumb: #60b0f4;
+            --mobile-nav-bg: rgba(30,30,30,0.8);
+            --mobile-nav-border: #60b0f4;
+            --mobile-nav-text: #f0f0f0;
+            --mobile-nav-active-bg: #60b0f4;
+            --mobile-nav-active-text: #1a1a1a;
+            --backdrop-blur: blur(20px);
+            --panel-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            --panel-border: 1px solid rgba(255,255,255,0.06);
+            --display-border: 1px solid rgba(255,255,255,0.06);
+            --btn-border: 1px solid rgba(255,255,255,0.06);
+            --dialog-blur: blur(20px);
+            --glass-edge: none;
+            --glass-inset: none;
+        }
+
+        /* 酷黑 · 浅色 */
+        [data-theme="coolblack"][data-mode="light"] {
+            --bg-body: #e6e9f0;
+            --bg-panel-dark: rgba(255, 255, 255, 0.75);
+            --bg-panel-light: rgba(240, 242, 248, 0.65);
+            --bg-display: rgba(255, 255, 255, 0.5);
+            --text-primary: #222222;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent: #2a7bb0;
+            --accent-hover: #1f5f8a;
+            --btn-bg: rgba(200, 210, 220, 0.4);
+            --btn-shadow: rgba(0,0,0,0.08);
+            --border-color: rgba(0,0,0,0.06);
+            --divider-bg: rgba(0,0,0,0.06);
+            --calendar-today: #2a7bb0;
+            --calendar-selected: #43a047;
+            --tab-bg: rgba(255,255,255,0.5);
+            --tab-text: #555555;
+            --tab-active: #222222;
+            --tab-border: #2a7bb0;
+            --dialog-bg: rgba(255,255,255,0.9);
+            --dialog-text: #222222;
+            --dialog-border: #2a7bb0;
+            --btn-func-bg: #d9735b;
+            --btn-op-bg: #2a7bb0;
+            --btn-eq-bg: #43a047;
+            --btn-op-text: #ffffff;
+            --scrollbar-track: rgba(0,0,0,0.05);
+            --scrollbar-thumb: #2a7bb0;
+            --mobile-nav-bg: rgba(255,255,255,0.7);
+            --mobile-nav-border: #2a7bb0;
+            --mobile-nav-text: #222222;
+            --mobile-nav-active-bg: #2a7bb0;
+            --mobile-nav-active-text: #ffffff;
+            --backdrop-blur: blur(20px);
+            --panel-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            --panel-border: 1px solid rgba(255,255,255,0.3);
+            --display-border: 1px solid rgba(255,255,255,0.3);
+            --btn-border: 1px solid rgba(255,255,255,0.2);
+            --dialog-blur: blur(20px);
+            --glass-edge: none;
+            --glass-inset: none;
+        }
+
+        /* ----- 云母亚克力 · 深色（全新设计） ----- */
+        [data-theme="mica"][data-mode="dark"] {
+            --bg-body: #0f0f10;
+            --app-bg: rgba(20, 20, 22, 0.6);
+            --bg-panel-dark: rgba(255, 255, 255, 0.06);
+            --bg-panel-light: rgba(255, 255, 255, 0.04);
+            --bg-display: rgba(255, 255, 255, 0.05);
+            --text-primary: #e8e8ea;
+            --text-secondary: #b0b0b5;
+            --text-muted: #707075;
+            --accent: #7cb9e8;
+            --accent-hover: #63a5d4;
+            --btn-bg: rgba(255, 255, 255, 0.08);
+            --btn-shadow: rgba(0,0,0,0.3);
+            --border-color: rgba(255,255,255,0.08);
+            --divider-bg: rgba(255,255,255,0.06);
+            --calendar-today: #7cb9e8;
+            --calendar-selected: #4caf50;
+            --tab-bg: rgba(255,255,255,0.05);
+            --tab-text: #b0b0b5;
+            --tab-active: #e8e8ea;
+            --tab-border: #7cb9e8;
+            --dialog-bg: rgba(30, 30, 32, 0.8);
+            --dialog-text: #e8e8ea;
+            --dialog-border: #7cb9e8;
+            --btn-func-bg: #c97a62;
+            --btn-op-bg: #7cb9e8;
+            --btn-eq-bg: #4caf50;
+            --btn-op-text: #0f0f10;
+            --scrollbar-track: rgba(255,255,255,0.05);
+            --scrollbar-thumb: #7cb9e8;
+            --mobile-nav-bg: rgba(255,255,255,0.06);
+            --mobile-nav-border: #7cb9e8;
+            --mobile-nav-text: #e8e8ea;
+            --mobile-nav-active-bg: #7cb9e8;
+            --mobile-nav-active-text: #0f0f10;
+            --backdrop-blur: blur(40px);
+            --panel-shadow: 0 8px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            --panel-border: 1px solid rgba(255,255,255,0.06);
+            --display-border: 1px solid rgba(255,255,255,0.06);
+            --btn-border: 1px solid rgba(255,255,255,0.06);
+            --dialog-blur: blur(40px);
+            --glass-edge: 0 0 0 1px rgba(255,255,255,0.05) inset;
+            --glass-inset: 0 2px 8px rgba(0,0,0,0.2);
+            --paper-texture: none;
+        }
+
+        /* 云母亚克力 · 浅色（纸张+玻璃） */
+        [data-theme="mica"][data-mode="light"] {
+            --bg-body: #f5f2ed;
+            --app-bg: rgba(255, 248, 240, 0.5);
+            --bg-panel-dark: rgba(255, 252, 248, 0.2);
+            --bg-panel-light: rgba(255, 255, 255, 0.12);
+            --bg-display: rgba(255, 255, 255, 0.08);
+            --text-primary: #1c1a18;
+            --text-secondary: #3a3733;
+            --text-muted: #6b6762;
+            --accent: #b8a48c;
+            --accent-hover: #a08b76;
+            --btn-bg: rgba(200, 185, 170, 0.12);
+            --btn-shadow: rgba(0,0,0,0.03);
+            --border-color: rgba(255,255,255,0.15);
+            --divider-bg: rgba(0,0,0,0.03);
+            --calendar-today: #b8a48c;
+            --calendar-selected: #8b7a68;
+            --tab-bg: rgba(255,255,255,0.08);
+            --tab-text: #3a3733;
+            --tab-active: #1c1a18;
+            --tab-border: #b8a48c;
+            --dialog-bg: rgba(255,252,248,0.25);
+            --dialog-text: #1c1a18;
+            --dialog-border: #b8a48c;
+            --btn-func-bg: #c9b09b;
+            --btn-op-bg: #b8a48c;
+            --btn-eq-bg: #8b7a68;
+            --btn-op-text: #ffffff;
+            --scrollbar-track: rgba(0,0,0,0.02);
+            --scrollbar-thumb: #b8a48c;
+            --mobile-nav-bg: rgba(255,255,255,0.1);
+            --mobile-nav-border: #b8a48c;
+            --mobile-nav-text: #1c1a18;
+            --mobile-nav-active-bg: #b8a48c;
+            --mobile-nav-active-text: #ffffff;
+            --backdrop-blur: blur(40px);
+            --panel-shadow: 0 8px 40px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.4);
+            --panel-border: 1px solid rgba(255,255,255,0.25);
+            --display-border: 1px solid rgba(255,255,255,0.2);
+            --btn-border: 1px solid rgba(255,255,255,0.15);
+            --dialog-blur: blur(40px);
+            --glass-edge: 0 0 0 1px rgba(255,255,255,0.3) inset;
+            --glass-inset: 0 2px 8px rgba(0,0,0,0.01);
+            --paper-texture: repeating-linear-gradient(45deg, rgba(0,0,0,0.003) 0px, rgba(0,0,0,0.003) 2px, transparent 2px, transparent 4px);
+        }
+
+        /* ============================================================
+           2. 应用基础样式
+           ============================================================ */
+        body {
+            background: var(--bg-body);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .app {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            height: 90vh;
+            min-height: 600px;
+            background: var(--app-bg, var(--bg-body));
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: background 0.3s, box-shadow 0.3s, border 0.3s;
+            backdrop-filter: var(--backdrop-blur, none);
+            border: var(--app-border, none);
+            position: relative;
+        }
+        [data-theme="mica"][data-mode="light"] .app::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--paper-texture);
+            pointer-events: none;
+            z-index: 0;
+        }
+        [data-theme="mica"] .app > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .left-col, .right-col {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+        .left-col { flex: 3; }
+        .right-col { flex: 2; }
+
+        .panel {
+            padding: 16px;
+            overflow: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-panel-dark);
+            border: var(--panel-border, none);
+            box-shadow: var(--panel-shadow, none);
+            backdrop-filter: var(--backdrop-blur, none);
+            transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+            border-radius: 12px;
+            margin: 4px;
+        }
+        [data-theme="mica"] .panel {
+            background: var(--bg-panel-dark);
+            box-shadow: var(--panel-shadow);
+            border: var(--panel-border);
+            backdrop-filter: var(--backdrop-blur);
+            border-radius: 16px;
+            margin: 6px;
+        }
+
+        .panel-top { flex: 1; }
+        .panel-bottom { flex: 1; }
+
+        .divider-h, .divider-v {
+            flex-shrink: 0;
+            background: var(--divider-bg);
+            transition: background 0.2s;
+        }
+        .divider-h { height: 6px; cursor: row-resize; border-radius: 4px; }
+        .divider-v { width: 6px; cursor: col-resize; border-radius: 4px; }
+        .divider-h:hover, .divider-v:hover { background: var(--accent); }
+
+        .display {
+            background: var(--bg-display);
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-align: right;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            backdrop-filter: var(--backdrop-blur, none);
+            border: var(--display-border, none);
+            transition: background 0.3s;
+            box-shadow: var(--glass-inset);
+            border: var(--display-border);
+        }
+        [data-theme="mica"] .display {
+            background: var(--bg-display);
+            backdrop-filter: var(--backdrop-blur);
+            border: var(--display-border);
+            box-shadow: var(--glass-inset);
+            border-radius: 14px;
+        }
+        .display .expr {
+            color: var(--text-secondary);
+            font-size: 16px;
+            min-height: 24px;
+        }
+        .display .result {
+            font-size: 36px;
+            font-weight: bold;
+            min-height: 48px;
+            color: var(--text-primary);
+        }
+        .display .result.error { color: #e74c3c; }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .toolbar button, .toolbar select {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .toolbar button:hover { background: rgba(243,156,18,0.15); }
+        .toolbar select {
+            background: var(--bg-panel-light);
+            color: var(--text-primary);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 4px 12px;
+            font-size: 14px;
+        }
+
+        .num-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            flex: 1;
+        }
+        .num-grid button {
+            padding: 12px 0;
+            font-size: 18px;
+            font-weight: bold;
+            border: var(--btn-border, none);
+            border-radius: 8px;
+            cursor: pointer;
+            background: var(--btn-bg);
+            color: var(--text-primary);
+            transition: 0.1s;
+            box-shadow: 0 3px 0 var(--btn-shadow);
+            backdrop-filter: var(--backdrop-blur, none);
+        }
+        [data-theme="mica"] .num-grid button {
+            background: var(--btn-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: var(--btn-border);
+            box-shadow: var(--glass-inset);
+            border-radius: 12px;
+        }
+        .num-grid button:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--btn-shadow);
+        }
+        .num-grid button.func { background: var(--btn-func-bg); color: white; }
+        .num-grid button.op {
+            background: var(--btn-op-bg);
+            color: var(--btn-op-text);
+        }
+        .num-grid button.op:hover { filter: brightness(1.1); }
+        .num-grid button.eq { background: var(--btn-eq-bg); color: white; }
+        .num-grid button.zero { grid-column: span 2; }
+
+        .calendar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .calendar .month-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .calendar .month-bar button {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .calendar .month-bar .month-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+            min-width: 100px;
+            text-align: center;
+        }
+        .calendar .week-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            width: 100%;
+            max-width: 280px;
+        }
+        .calendar .week-row span {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+        .calendar .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            width: 100%;
+            max-width: 280px;
+        }
+        .calendar .days-grid button {
+            aspect-ratio: 1;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .calendar .days-grid button.today { background: var(--calendar-today); color: white; }
+        .calendar .days-grid button.selected { background: var(--calendar-selected); color: white; }
+        .calendar .days-grid button:hover { background: var(--btn-bg); }
+        .calendar .selected-date {
+            margin-top: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 6px;
+        }
+        .history-list .h-item {
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+        .history-list .h-item:hover { background: var(--btn-bg); }
+        .history-list .h-item .h-expr { color: var(--text-secondary); font-size: 13px; }
+        .history-list .h-item .h-result { font-size: 16px; font-weight: 500; }
+        .history-empty {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 30px 0;
+            font-size: 14px;
+        }
+
+        /* 对话框（设置） */
+        .color-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+        .color-dialog.show { display: flex; }
+        .color-dialog .dialog-box {
+            background: var(--dialog-bg);
+            border: 1px solid var(--dialog-border);
+            border-radius: 16px;
+            padding: 24px;
+            min-width: 280px;
+            max-width: 90vw;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: var(--dialog-text);
+            backdrop-filter: var(--dialog-blur, none);
+        }
+        [data-theme="mica"] .color-dialog .dialog-box {
+            background: var(--dialog-bg);
+            backdrop-filter: var(--dialog-blur);
+            border: var(--panel-border);
+            box-shadow: var(--panel-shadow);
+        }
+        .color-dialog .dialog-box h3 { margin-bottom: 12px; }
+        .color-dialog .dialog-box .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .color-dialog .dialog-box .settings-row select,
+        .color-dialog .dialog-box .settings-row input[type="color"] {
+            background: var(--bg-panel-light);
+            color: var(--text-primary);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            padding: 4px 12px;
+            cursor: pointer;
+        }
+        .color-dialog .dialog-box .preset-colors {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .color-dialog .dialog-box .preset-colors div {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+        .color-dialog .dialog-box .preset-colors div:hover { transform: scale(1.15); }
+        .color-dialog .dialog-box .preset-colors div.active { border-color: var(--accent); }
+        .color-dialog .dialog-box .btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .color-dialog .dialog-box .btn-row button {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent);
+            color: var(--btn-op-text);
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .color-dialog .dialog-box .btn-row button.close {
+            background: var(--btn-bg);
+            color: var(--text-primary);
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 8px; }
+
+        /* ============================================================
+           3. 竖屏适配（跳转按钮）
+           ============================================================ */
+        @media (orientation: portrait), (max-width: 700px) {
+            body { padding: 0; }
+            .app {
+                flex-direction: column;
+                height: 100vh;
+                min-height: 100vh;
+                border-radius: 0;
+                max-width: 100%;
+                border: none;
+                box-shadow: none;
+            }
+            .left-col {
+                flex: 0 0 auto;
+                height: 55vh;
+            }
+            .right-col {
+                flex: 1;
+                height: 45vh;
+                border-radius: 0;
+                background: var(--bg-panel-light);
+            }
+            .divider-v, .divider-h { display: none; }
+
+            .right-col .panel,
+            .right-col .panel-top,
+            .right-col .panel-bottom { display: none; }
+
+            .right-col .tab-container {
+                display: flex !important;
+                flex-direction: column;
+                height: 100%;
+                background: var(--bg-panel-light);
+            }
+            .right-col .tab-bar { display: none; }
+            .right-col .tab-content {
+                flex: 1;
+                overflow: auto;
+                padding: 12px;
+                background: var(--bg-panel-light);
+            }
+            .right-col .tab-content .tab-page { display: none; }
+            .right-col .tab-content .tab-page.active { display: block; }
+
+            .mobile-nav {
+                display: flex !important;
+                gap: 8px;
+                margin-top: 8px;
+                justify-content: center;
+            }
+            .mobile-nav button {
+                flex: 1;
+                padding: 8px 0;
+                background: var(--mobile-nav-bg);
+                border: 1px solid var(--mobile-nav-border);
+                border-radius: 8px;
+                color: var(--mobile-nav-text);
+                font-weight: bold;
+                font-size: 14px;
+                cursor: pointer;
+                transition: 0.2s;
+                backdrop-filter: var(--backdrop-blur, none);
+            }
+            .mobile-nav button.active {
+                background: var(--mobile-nav-active-bg);
+                color: var(--mobile-nav-active-text);
+            }
+            .mobile-nav button:hover { filter: brightness(1.1); }
+
+            .calendar .days-grid button { width: 36px; height: 36px; }
+            .history-list .h-item { padding: 8px 0; }
+            .toolbar button, .toolbar select { font-size: 16px; }
+        }
+
+        .mobile-nav { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="app" id="app" data-theme="blackboard" data-mode="dark">
+
+    <!-- ========== 左列 ========== -->
+    <div class="left-col" id="leftCol">
+        <div class="panel panel-top bg-dark1" id="panelTopLeft">
+            <div class="display">
+                <div class="expr" id="expression"></div>
+                <div class="result" id="result">0</div>
+            </div>
+        </div>
+        <div class="divider-h" id="dividerH"></div>
+        <div class="panel panel-bottom bg-dark1" id="panelBottomLeft">
+            <div class="toolbar">
+                <button id="settingsBtn">⚙</button>
+                <button id="saveBtn">💾</button>
+                <button id="aboutBtn">ℹ️</button>
+                <select id="langSelect">
+                    <option value="zh">简体中文</option>
+                    <option value="zh_tw">繁體中文</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            <div class="num-grid" id="numGrid"></div>
+            <div class="mobile-nav" id="mobileNav">
+                <button class="mobile-tab-btn active" data-tab="calendar">📅 日历</button>
+                <button class="mobile-tab-btn" data-tab="history">📜 历史</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分隔条 -->
+    <div class="divider-v" id="dividerV"></div>
+
+    <!-- ========== 右列 ========== -->
+    <div class="right-col" id="rightCol">
+        <!-- 桌面模式 -->
+        <div class="panel panel-top bg-dark2" id="panelTopRight">
+            <div class="calendar">
+                <div class="month-bar">
+                    <button id="prevMonth">◀</button>
+                    <span class="month-label" id="monthLabel">2025年 01月</span>
+                    <button id="nextMonth">▶</button>
+                </div>
+                <div class="week-row" id="weekRow"></div>
+                <div class="days-grid" id="daysGrid"></div>
+                <div class="selected-date" id="selectedDateLabel">选中的日期: 2025年01月01日</div>
+            </div>
+        </div>
+        <div class="divider-h" id="dividerH2"></div>
+        <div class="panel panel-bottom bg-dark2" id="panelBottomRight">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:var(--text-secondary); font-size:16px;">📜 历史记录</span>
+                <button id="clearHistoryBtn" style="background:transparent; border:1px solid var(--accent); color:var(--accent); border-radius:20px; padding:2px 12px; cursor:pointer;">清空</button>
+            </div>
+            <div class="history-list" id="historyList"></div>
+        </div>
+
+        <!-- 竖屏 Tab 容器 -->
+        <div class="tab-container" style="display:none;">
+            <div class="tab-content">
+                <div class="tab-page active" id="tab-calendar">
+                    <div class="calendar">
+                        <div class="month-bar">
+                            <button id="prevMonthMobile">◀</button>
+                            <span class="month-label" id="monthLabelMobile">2025年 01月</span>
+                            <button id="nextMonthMobile">▶</button>
+                        </div>
+                        <div class="week-row" id="weekRowMobile"></div>
+                        <div class="days-grid" id="daysGridMobile"></div>
+                        <div class="selected-date" id="selectedDateLabelMobile">选中的日期: 2025年01月01日</div>
+                    </div>
+                </div>
+                <div class="tab-page" id="tab-history">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="color:var(--text-secondary); font-size:16px;">📜 历史记录</span>
+                        <button id="clearHistoryBtnMobile" style="background:transparent; border:1px solid var(--accent); color:var(--accent); border-radius:20px; padding:2px 12px; cursor:pointer;">清空</button>
+                    </div>
+                    <div class="history-list" id="historyListMobile"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 设置对话框（多语言适配） -->
+<div class="color-dialog" id="colorDialog">
+    <div class="dialog-box">
+        <h3 id="dialogTitle">🎨 设置</h3>
+
+        <div class="settings-row">
+            <span id="dlgLangLabel">🌐 语言</span>
+            <select id="dialogLangSelect">
+                <option value="zh">简体中文</option>
+                <option value="zh_tw">繁體中文</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+
+        <div class="settings-row">
+            <span id="dlgThemeLabel">🎭 主题</span>
+            <select id="dialogThemeSelect">
+                <option value="blackboard">黑板</option>
+                <option value="coolblack">酷黑</option>
+                <option value="mica">云母亚克力</option>
+            </select>
+        </div>
+
+        <div class="settings-row">
+            <span id="dlgModeLabel">🌓 颜色模式</span>
+            <select id="dialogModeSelect">
+                <option value="light">浅色</option>
+                <option value="dark">深色</option>
+                <option value="system">跟随系统</option>
+            </select>
+        </div>
+
+        <div class="settings-row">
+            <span id="dlgAccentLabel">🎨 强调色</span>
+            <input type="color" id="dialogAccentColor" value="#f39c12">
+        </div>
+
+        <div class="preset-colors" id="dialogPresetColors">
+            <div style="background:#f39c12;" data-color="#f39c12"></div>
+            <div style="background:#3498db;" data-color="#3498db"></div>
+            <div style="background:#e74c3c;" data-color="#e74c3c"></div>
+            <div style="background:#9b59b6;" data-color="#9b59b6"></div>
+            <div style="background:#1abc9c;" data-color="#1abc9c"></div>
+            <div style="background:#e67e22;" data-color="#e67e22"></div>
+        </div>
+
+        <div class="btn-row">
+            <button class="close" id="dialogCloseBtn">关闭</button>
+            <button id="dialogSaveBtn">保存</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ================================================================
+    //  多语言资源（更新版本号）
+    // ================================================================
+    const LANG = {
+        zh: {
+            langName: '简体中文',
+            settings: '⚙ 设置',
+            save: '💾 保存',
+            about: 'ℹ️ 关于',
+            calendarTitle: '📅 日历',
+            prevMonth: '◀',
+            nextMonth: '▶',
+            weekDays: '日,一,二,三,四,五,六',
+            selectedDate: '选中的日期: ',
+            historyTitle: '📜 历史记录',
+            emptyHistory: '暂无记录',
+            settingsTitle: '设置',
+            settingsHeader: '字体颜色',
+            fontColorLabel: '选择字体颜色:',
+            saveBtn: '保存',
+            closeBtn: '取消',
+            aboutTitle: '关于计算器',
+            aboutContent: '硒瓜计算器 · 三主题\n版本 26.3.0-snapshot2 (Build 260819)\n\n© 2022-2023 高速连司 (HighspeedUnion)\nGPL-3.0\n项目: https://github.com/HighspeedUnion/luck-money-help\n论坛: https://github.com/HighspeedUnion/GS-talk',
+            clear: 'C',
+            sign: '±',
+            percent: '%',
+            divide: '÷',
+            multiply: '×',
+            subtract: '−',
+            add: '+',
+            equals: '=',
+            decimal: '.',
+            error: '错误',
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            dialogLang: '语言',
+            dialogTheme: '主题',
+            dialogMode: '颜色模式',
+            dialogAccent: '强调色',
+            dialogClose: '关闭',
+            dialogSave: '保存',
+            dialogTitle: '设置'
+        },
+        zh_tw: {
+            langName: '繁體中文',
+            settings: '⚙ 設定',
+            save: '💾 儲存',
+            about: 'ℹ️ 關於',
+            calendarTitle: '📅 日曆',
+            prevMonth: '◀',
+            nextMonth: '▶',
+            weekDays: '日,一,二,三,四,五,六',
+            selectedDate: '選中的日期: ',
+            historyTitle: '📜 歷史記錄',
+            emptyHistory: '暫無記錄',
+            settingsTitle: '設定',
+            settingsHeader: '字體顏色',
+            fontColorLabel: '選擇字體顏色:',
+            saveBtn: '儲存',
+            closeBtn: '取消',
+            aboutTitle: '關於計算器',
+            aboutContent: '硒瓜計算器 · 三主題\n版本 26.3.0-snapshot2 (Build 260819)\n\n© 2022-2023 高速連司 (HighspeedUnion)\nGPL-3.0\n項目: https://github.com/HighspeedUnion/luck-money-help\n論壇: https://github.com/HighspeedUnion/GS-talk',
+            clear: 'C',
+            sign: '±',
+            percent: '%',
+            divide: '÷',
+            multiply: '×',
+            subtract: '−',
+            add: '+',
+            equals: '=',
+            decimal: '.',
+            error: '錯誤',
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            dialogLang: '語言',
+            dialogTheme: '主題',
+            dialogMode: '顏色模式',
+            dialogAccent: '強調色',
+            dialogClose: '關閉',
+            dialogSave: '儲存',
+            dialogTitle: '設定'
+        },
+        ja: {
+            langName: '日本語',
+            settings: '⚙ 設定',
+            save: '💾 保存',
+            about: 'ℹ️ 情報',
+            calendarTitle: '📅 カレンダー',
+            prevMonth: '◀',
+            nextMonth: '▶',
+            weekDays: '日,月,火,水,木,金,土',
+            selectedDate: '選択した日付: ',
+            historyTitle: '📜 履歴',
+            emptyHistory: '履歴がありません',
+            settingsTitle: '設定',
+            settingsHeader: 'フォントカラー',
+            fontColorLabel: 'フォントカラーを選択:',
+            saveBtn: '保存',
+            closeBtn: '閉じる',
+            aboutTitle: '計算機について',
+            aboutContent: 'セイカ電卓 · 三テーマ\nバージョン 26.3.0-snapshot2 (Build 260819)\n\n© 2022-2023 高速連司 (HighspeedUnion)\nGPL-3.0\nプロジェクト: https://github.com/HighspeedUnion/luck-money-help\nフォーラム: https://github.com/HighspeedUnion/GS-talk',
+            clear: 'C',
+            sign: '±',
+            percent: '%',
+            divide: '÷',
+            multiply: '×',
+            subtract: '−',
+            add: '+',
+            equals: '=',
+            decimal: '.',
+            error: 'エラー',
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            dialogLang: '言語',
+            dialogTheme: 'テーマ',
+            dialogMode: 'カラーモード',
+            dialogAccent: 'アクセントカラー',
+            dialogClose: '閉じる',
+            dialogSave: '保存',
+            dialogTitle: '設定'
+        },
+        ko: {
+            langName: '한국어',
+            settings: '⚙ 설정',
+            save: '💾 저장',
+            about: 'ℹ️ 정보',
+            calendarTitle: '📅 달력',
+            prevMonth: '◀',
+            nextMonth: '▶',
+            weekDays: '일,월,화,수,목,금,토',
+            selectedDate: '선택한 날짜: ',
+            historyTitle: '📜 기록',
+            emptyHistory: '기록 없음',
+            settingsTitle: '설정',
+            settingsHeader: '글자 색상',
+            fontColorLabel: '글자 색상 선택:',
+            saveBtn: '저장',
+            closeBtn: '닫기',
+            aboutTitle: '계산기 정보',
+            aboutContent: '셀레늄 계산기 · 세 테마\n버전 26.3.0-snapshot2 (Build 260819)\n\n© 2022-2023 HighspeedUnion\nGPL-3.0\n프로젝트: https://github.com/HighspeedUnion/luck-money-help\n포럼: https://github.com/HighspeedUnion/GS-talk',
+            clear: 'C',
+            sign: '±',
+            percent: '%',
+            divide: '÷',
+            multiply: '×',
+            subtract: '−',
+            add: '+',
+            equals: '=',
+            decimal: '.',
+            error: '오류',
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            dialogLang: '언어',
+            dialogTheme: '테마',
+            dialogMode: '색상 모드',
+            dialogAccent: '강조 색상',
+            dialogClose: '닫기',
+            dialogSave: '저장',
+            dialogTitle: '설정'
+        },
+        en: {
+            langName: 'English',
+            settings: '⚙ Settings',
+            save: '💾 Save',
+            about: 'ℹ️ About',
+            calendarTitle: '📅 Calendar',
+            prevMonth: '◀',
+            nextMonth: '▶',
+            weekDays: 'Su,Mo,Tu,We,Th,Fr,Sa',
+            selectedDate: 'Selected date: ',
+            historyTitle: '📜 History',
+            emptyHistory: 'No records',
+            settingsTitle: 'Settings',
+            settingsHeader: 'Font Color',
+            fontColorLabel: 'Choose font color:',
+            saveBtn: 'Save',
+            closeBtn: 'Cancel',
+            aboutTitle: 'About Calculator',
+            aboutContent: 'Selenium Calculator · 3 Themes\nVersion 26.3.0-snapshot2 (Build 260819)\n\n© 2022-2023 HighspeedUnion\nGPL-3.0\nProject: https://github.com/HighspeedUnion/luck-money-help\nForum: https://github.com/HighspeedUnion/GS-talk',
+            clear: 'C',
+            sign: '±',
+            percent: '%',
+            divide: '÷',
+            multiply: '×',
+            subtract: '−',
+            add: '+',
+            equals: '=',
+            decimal: '.',
+            error: 'Error',
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            dialogLang: 'Language',
+            dialogTheme: 'Theme',
+            dialogMode: 'Color mode',
+            dialogAccent: 'Accent color',
+            dialogClose: 'Close',
+            dialogSave: 'Save',
+            dialogTitle: 'Settings'
+        }
+    };
+
+    // ================================================================
+    //  状态
+    // ================================================================
+    const state = {
+        fontColor: '#f39c12',
+        lang: 'zh',
+        history: [],
+        currentInput: '0',
+        previousInput: '',
+        operator: '',
+        shouldReset: false,
+        selectedDate: new Date(),
+        currentYearMonth: new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0'),
+        theme: 'blackboard',
+        mode: 'dark',
+        actualMode: 'dark'
+    };
+
+    function getYearMonth() {
+        const parts = state.currentYearMonth.split('-');
+        return { year: parseInt(parts[0]), month: parseInt(parts[1]) };
+    }
+
+    // ================================================================
+    //  存储（安全降级）
+    // ================================================================
+    function loadState() {
+        try {
+            const data = localStorage.getItem('calculator_data');
+            if (data) {
+                const parsed = JSON.parse(data);
+                Object.assign(state, parsed);
+                if (!Array.isArray(state.history)) state.history = [];
+                if (parsed.selectedDate) state.selectedDate = new Date(parsed.selectedDate);
+                if (parsed.currentYearMonth) state.currentYearMonth = parsed.currentYearMonth;
+                else {
+                    const now = new Date();
+                    state.currentYearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+                }
+                if (!state.theme) state.theme = 'blackboard';
+                if (!state.mode) state.mode = 'dark';
+            }
+        } catch (e) {
+            console.warn('加载数据失败，使用默认值:', e);
+        }
+        if (!state.currentYearMonth) {
+            const now = new Date();
+            state.currentYearMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        }
+        updateActualMode();
+    }
+
+    function saveState() {
+        try {
+            const data = {
+                fontColor: state.fontColor,
+                lang: state.lang,
+                history: state.history,
+                selectedDate: state.selectedDate.toISOString(),
+                currentYearMonth: state.currentYearMonth,
+                theme: state.theme,
+                mode: state.mode
+            };
+            localStorage.setItem('calculator_data', JSON.stringify(data));
+        } catch (e) {
+            console.warn('保存数据失败（localStorage不可用）:', e);
+        }
+    }
+
+    // ================================================================
+    //  主题与模式切换
+    // ================================================================
+    function updateActualMode() {
+        if (state.mode === 'system') {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            state.actualMode = prefersDark ? 'dark' : 'light';
+        } else {
+            state.actualMode = state.mode;
+        }
+        applyThemeAndMode();
+    }
+
+    function applyThemeAndMode() {
+        const app = document.getElementById('app');
+        app.setAttribute('data-theme', state.theme);
+        app.setAttribute('data-mode', state.actualMode);
+        document.getElementById('dialogThemeSelect').value = state.theme;
+        document.getElementById('dialogModeSelect').value = state.mode;
+        document.getElementById('dialogAccentColor').value = state.fontColor;
+        document.getElementById('dialogLangSelect').value = state.lang;
+        document.getElementById('langSelect').value = state.lang;
+        document.querySelectorAll('#dialogPresetColors div').forEach(el => {
+            el.classList.toggle('active', el.dataset.color === state.fontColor);
+        });
+        updateDialogLanguage();
+    }
+
+    const darkModeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    darkModeMedia.addEventListener('change', () => {
+        if (state.mode === 'system') {
+            state.actualMode = darkModeMedia.matches ? 'dark' : 'light';
+            applyThemeAndMode();
+        }
+    });
+
+    // ================================================================
+    //  DOM 引用
+    // ================================================================
+    const $ = id => document.getElementById(id);
+    const expressionEl = $('expression');
+    const resultEl = $('result');
+    const numGrid = $('numGrid');
+    const historyList = $('historyList');
+    const langSelect = $('langSelect');
+    const settingsBtn = $('settingsBtn');
+    const saveBtn = $('saveBtn');
+    const aboutBtn = $('aboutBtn');
+    const colorDialog = $('colorDialog');
+    const dialogCloseBtn = $('dialogCloseBtn');
+    const dialogSaveBtn = $('dialogSaveBtn');
+    const dialogLangSelect = $('dialogLangSelect');
+    const dialogThemeSelect = $('dialogThemeSelect');
+    const dialogModeSelect = $('dialogModeSelect');
+    const dialogAccentColor = $('dialogAccentColor');
+    const clearHistoryBtn = $('clearHistoryBtn');
+    const prevMonthBtn = $('prevMonth');
+    const nextMonthBtn = $('nextMonth');
+    const monthLabel = $('monthLabel');
+    const weekRow = $('weekRow');
+    const daysGrid = $('daysGrid');
+    const selectedDateLabel = $('selectedDateLabel');
+    const prevMonthMobile = $('prevMonthMobile');
+    const nextMonthMobile = $('nextMonthMobile');
+    const monthLabelMobile = $('monthLabelMobile');
+    const weekRowMobile = $('weekRowMobile');
+    const daysGridMobile = $('daysGridMobile');
+    const selectedDateLabelMobile = $('selectedDateLabelMobile');
+    const clearHistoryBtnMobile = $('clearHistoryBtnMobile');
+    const historyListMobile = $('historyListMobile');
+
+    function getDict() { return LANG[state.lang] || LANG.zh; }
+    function t(key) { return getDict()[key] || key; }
+
+    // ================================================================
+    //  更新对话框语言
+    // ================================================================
+    function updateDialogLanguage() {
+        const dict = getDict();
+        document.getElementById('dialogTitle').textContent = dict.dialogTitle || '设置';
+        document.getElementById('dlgLangLabel').textContent = dict.dialogLang || '语言';
+        document.getElementById('dlgThemeLabel').textContent = dict.dialogTheme || '主题';
+        document.getElementById('dlgModeLabel').textContent = dict.dialogMode || '颜色模式';
+        document.getElementById('dlgAccentLabel').textContent = dict.dialogAccent || '强调色';
+        document.getElementById('dialogCloseBtn').textContent = dict.dialogClose || '关闭';
+        document.getElementById('dialogSaveBtn').textContent = dict.dialogSave || '保存';
+    }
+
+    // ================================================================
+    //  更新语言（整体）
+    // ================================================================
+    function updateLanguage() {
+        const dict = getDict();
+        settingsBtn.textContent = dict.settings;
+        saveBtn.textContent = dict.save;
+        aboutBtn.textContent = dict.about;
+        clearHistoryBtn.textContent = dict.clearHistory || '清空';
+        clearHistoryBtnMobile.textContent = dict.clearHistory || '清空';
+        document.querySelectorAll('.num-grid button').forEach(btn => {
+            const key = btn.dataset.key;
+            if (key && dict[key] !== undefined) {
+                btn.textContent = dict[key];
+            }
+        });
+        buildHistory();
+        updateSelectedDateLabel();
+        langSelect.value = state.lang;
+        dialogLangSelect.value = state.lang;
+        buildCalendar();
+        updateDialogLanguage();
+    }
+
+    // ================================================================
+    //  计算器逻辑
+    // ================================================================
+    function compute(a, op, b) {
+        const numA = parseFloat(a);
+        const numB = parseFloat(b);
+        if (isNaN(numA) || isNaN(numB)) return NaN;
+        switch(op) {
+            case '+': return numA + numB;
+            case '−': return numA - numB;
+            case '×': return numA * numB;
+            case '÷': return numB === 0 ? Infinity : numA / numB;
+            default: return numB;
+        }
+    }
+
+    function formatNumber(n) {
+        if (!isFinite(n)) return n === Infinity ? '∞' : '-∞';
+        if (isNaN(n)) return 'NaN';
+        let s = String(n);
+        if (s.length > 16) return n.toExponential(6);
+        return s;
+    }
+
+    function evaluate(expr) {
+        try {
+            const sanitized = expr.replace(/[^0-9+\-*/.() ]/g, '');
+            const result = Function('"use strict"; return (' + sanitized + ')')();
+            return result;
+        } catch (_) { return NaN; }
+    }
+
+    function handleAction(action) {
+        console.log('handleAction called with:', action);
+
+        if (action.match(/^[0-9]$/)) {
+            if (state.shouldReset || state.currentInput === '0') {
+                state.currentInput = action;
+                state.shouldReset = false;
+            } else {
+                if (state.currentInput.length < 16) state.currentInput += action;
+            }
+            updateDisplay();
+            saveState();
+            return;
+        }
+
+        if (action === 'decimal') {
+            if (state.shouldReset) { state.currentInput = '0.'; state.shouldReset = false; }
+            else if (!state.currentInput.includes('.')) state.currentInput += '.';
+            updateDisplay();
+            saveState();
+            return;
+        }
+
+        if (['add','subtract','multiply','divide'].includes(action)) {
+            const opMap = { 'add': '+', 'subtract': '−', 'multiply': '×', 'divide': '÷' };
+            const op = opMap[action];
+            const num = parseFloat(state.currentInput);
+
+            if (state.operator && state.previousInput && !state.shouldReset) {
+                const r = compute(state.previousInput, state.operator, num);
+                if (!isFinite(r) || isNaN(r)) {
+                    state.currentInput = 'Error';
+                    state.operator = ''; state.previousInput = ''; state.shouldReset = true;
+                    updateDisplay(); return;
+                }
+                const f = formatNumber(r);
+                state.history.push(f);
+                state.currentInput = f;
+                state.previousInput = f;
+                state.operator = op;
+                state.shouldReset = true;
+                updateDisplay(); buildHistory(); saveState();
+                return;
+            }
+
+            if (state.previousInput && !state.shouldReset) {
+                const r = compute(state.previousInput, state.operator, parseFloat(state.currentInput));
+                if (!isFinite(r) || isNaN(r)) {
+                    state.currentInput = 'Error';
+                    state.operator = ''; state.previousInput = ''; state.shouldReset = true;
+                    updateDisplay(); return;
+                }
+                const f = formatNumber(r);
+                state.history.push(f);
+                state.currentInput = f;
+            }
+            state.previousInput = state.currentInput;
+            state.operator = op;
+            state.shouldReset = true;
+            updateDisplay(); buildHistory(); saveState();
+            return;
+        }
+
+        if (action === 'equals') {
+            if (state.operator && state.previousInput) {
+                const r = compute(state.previousInput, state.operator, parseFloat(state.currentInput));
+                if (!isFinite(r) || isNaN(r)) {
+                    state.currentInput = 'Error';
+                    state.operator = ''; state.previousInput = ''; state.shouldReset = true;
+                    updateDisplay(); return;
+                }
+                const f = formatNumber(r);
+                state.history.push(f);
+                state.currentInput = f;
+                state.previousInput = ''; state.operator = ''; state.shouldReset = true;
+                updateDisplay(); buildHistory(); saveState();
+            } else {
+                try {
+                    const expr = state.currentInput.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+                    const r = evaluate(expr);
+                    if (!isFinite(r) || isNaN(r)) { state.currentInput = 'Error'; updateDisplay(); return; }
+                    const f = formatNumber(r);
+                    state.history.push(f);
+                    state.currentInput = f;
+                    state.previousInput = ''; state.operator = ''; state.shouldReset = true;
+                    updateDisplay(); buildHistory(); saveState();
+                } catch (e) { state.currentInput = 'Error'; updateDisplay(); }
+            }
+            return;
+        }
+
+        if (action === 'clear') {
+            state.currentInput = '0';
+            state.previousInput = ''; state.operator = ''; state.shouldReset = false;
+            updateDisplay(); saveState();
+            return;
+        }
+
+        if (action === 'sign') {
+            if (state.currentInput !== '0' && state.currentInput !== 'Error') {
+                if (state.currentInput.startsWith('-')) state.currentInput = state.currentInput.slice(1);
+                else state.currentInput = '-' + state.currentInput;
+            }
+            updateDisplay(); saveState();
+            return;
+        }
+
+        if (action === 'percent') {
+            const v = parseFloat(state.currentInput);
+            if (!isNaN(v) && isFinite(v)) {
+                state.currentInput = formatNumber(v / 100);
+                updateDisplay(); saveState();
+            }
+        }
+    }
+
+    function updateDisplay() {
+        resultEl.textContent = state.currentInput;
+        resultEl.classList.toggle('error', ['Error','NaN','∞','-∞'].includes(state.currentInput));
+        if (state.operator && state.previousInput) {
+            expressionEl.textContent = state.previousInput + ' ' + state.operator;
+        } else if (state.previousInput && !state.operator) {
+            expressionEl.textContent = state.previousInput;
+        } else {
+            expressionEl.textContent = '';
+        }
+    }
+
+    function buildHistory() {
+        const dict = getDict();
+        [historyList, historyListMobile].forEach((list, idx) => {
+            list.innerHTML = '';
+            if (state.history.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'history-empty';
+                empty.textContent = dict.emptyHistory;
+                list.appendChild(empty);
+            } else {
+                const reversed = [...state.history].reverse();
+                reversed.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'h-item';
+                    div.innerHTML = `<div class="h-result">${item}</div>`;
+                    div.addEventListener('click', () => {
+                        state.currentInput = item;
+                        state.previousInput = ''; state.operator = ''; state.shouldReset = true;
+                        updateDisplay(); saveState();
+                    });
+                    list.appendChild(div);
+                });
+            }
+        });
+    }
+
+    // ================================================================
+    //  日历
+    // ================================================================
+    function buildCalendar() {
+        const ym = getYearMonth();
+        const year = ym.year, month = ym.month;
+        const firstDay = new Date(year, month-1, 1);
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const startDayOfWeek = firstDay.getDay();
+
+        const dict = getDict();
+        const weekNames = dict.weekDays.split(',');
+        [monthLabel, monthLabelMobile].forEach(el => el.textContent = year + '年 ' + String(month).padStart(2,'0') + '月');
+        [weekRow, weekRowMobile].forEach(el => el.innerHTML = weekNames.map(w => `<span>${w}</span>`).join(''));
+
+        function renderDays(grid, isMobile) {
+            grid.innerHTML = '';
+            const today = new Date();
+            const isToday = d => d.getFullYear()===today.getFullYear() && d.getMonth()===today.getMonth() && d.getDate()===today.getDate();
+            const isSelected = d => d.getFullYear()===state.selectedDate.getFullYear() && d.getMonth()===state.selectedDate.getMonth() && d.getDate()===state.selectedDate.getDate();
+
+            for (let i=0; i<startDayOfWeek; i++) {
+                const empty = document.createElement('span');
+                grid.appendChild(empty);
+            }
+            for (let day=1; day<=daysInMonth; day++) {
+                const btn = document.createElement('button');
+                btn.textContent = day;
+                const dateObj = new Date(year, month-1, day);
+                if (isToday(dateObj)) btn.classList.add('today');
+                if (isSelected(dateObj)) btn.classList.add('selected');
+                btn.addEventListener('click', () => {
+                    state.selectedDate = dateObj;
+                    updateSelectedDateLabel();
+                    buildCalendar();
+                    saveState();
+                });
+                grid.appendChild(btn);
+            }
+            const totalCells = startDayOfWeek + daysInMonth;
+            const remaining = (7 - totalCells % 7) % 7;
+            for (let i=0; i<remaining; i++) {
+                const empty = document.createElement('span');
+                grid.appendChild(empty);
+            }
+        }
+        renderDays(daysGrid, false);
+        renderDays(daysGridMobile, true);
+        updateSelectedDateLabel();
+    }
+
+    function updateSelectedDateLabel() {
+        const dict = getDict();
+        const d = state.selectedDate;
+        const str = d.getFullYear() + '年' + String(d.getMonth()+1).padStart(2,'0') + '月' + String(d.getDate()).padStart(2,'0') + '日';
+        selectedDateLabel.textContent = dict.selectedDate + str;
+        selectedDateLabelMobile.textContent = dict.selectedDate + str;
+    }
+
+    function prevMonth() {
+        const ym = getYearMonth();
+        let m = ym.month - 1, y = ym.year;
+        if (m === 0) { m = 12; y--; }
+        state.currentYearMonth = y + '-' + String(m).padStart(2,'0');
+        buildCalendar(); saveState();
+    }
+
+    function nextMonth() {
+        const ym = getYearMonth();
+        let m = ym.month + 1, y = ym.year;
+        if (m === 13) { m = 1; y++; }
+        state.currentYearMonth = y + '-' + String(m).padStart(2,'0');
+        buildCalendar(); saveState();
+    }
+
+    // ================================================================
+    //  构建数字按钮
+    // ================================================================
+    function buildNumGrid() {
+        const keys = [
+            ['clear','sign','percent','divide'],
+            ['7','8','9','multiply'],
+            ['4','5','6','subtract'],
+            ['1','2','3','add'],
+            ['0','decimal','equals']
+        ];
+        numGrid.innerHTML = '';
+        keys.forEach(row => {
+            row.forEach(key => {
+                const btn = document.createElement('button');
+                btn.dataset.key = key;
+                btn.classList.add('num-btn');
+                if (key === 'clear' || key === 'sign' || key === 'percent') btn.classList.add('func');
+                else if (['divide','multiply','subtract','add'].includes(key)) btn.classList.add('op');
+                else if (key === 'equals') btn.classList.add('eq');
+                if (key === '0') btn.classList.add('zero');
+                btn.addEventListener('click', function(e) {
+                    console.log('按钮点击:', key);
+                    handleAction(key);
+                });
+                numGrid.appendChild(btn);
+            });
+        });
+        updateLanguage();
+    }
+
+    // ================================================================
+    //  移动端跳转按钮
+    // ================================================================
+    function switchMobileTab(tabId) {
+        document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById('tab-' + tabId);
+        if (target) target.classList.add('active');
+        document.querySelectorAll('.mobile-tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.mobile-tab-btn[data-tab="${tabId}"]`)?.classList.add('active');
+    }
+
+    // ================================================================
+    //  事件绑定（确保所有按钮可用）
+    // ================================================================
+    // 保存按钮
+    saveBtn.addEventListener('click', function() {
+        saveState();
+        const tip = document.createElement('div');
+        tip.textContent = '✅ 已保存';
+        tip.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#27ae60; color:white; padding:8px 20px; border-radius:30px; font-weight:bold; z-index:9999;';
+        document.body.appendChild(tip);
+        setTimeout(() => tip.remove(), 1500);
+    });
+
+    // 关于按钮
+    aboutBtn.addEventListener('click', function() {
+        alert(getDict().aboutContent);
+    });
+
+    // 设置对话框打开
+    settingsBtn.addEventListener('click', function() {
+        colorDialog.classList.add('show');
+        dialogLangSelect.value = state.lang;
+        dialogThemeSelect.value = state.theme;
+        dialogModeSelect.value = state.mode;
+        dialogAccentColor.value = state.fontColor;
+        document.querySelectorAll('#dialogPresetColors div').forEach(el => {
+            el.classList.toggle('active', el.dataset.color === state.fontColor);
+        });
+        updateDialogLanguage();
+    });
+
+    // 对话框关闭
+    dialogCloseBtn.addEventListener('click', function() {
+        colorDialog.classList.remove('show');
+    });
+
+    // 预设色块点击（事件委托）
+    document.getElementById('dialogPresetColors').addEventListener('click', function(e) {
+        const target = e.target.closest('div');
+        if (target && target.dataset.color) {
+            document.getElementById('dialogAccentColor').value = target.dataset.color;
+            document.querySelectorAll('#dialogPresetColors div').forEach(el => el.classList.remove('active'));
+            target.classList.add('active');
+        }
+    });
+
+    // 对话框保存
+    dialogSaveBtn.addEventListener('click', function() {
+        state.lang = dialogLangSelect.value;
+        state.theme = dialogThemeSelect.value;
+        state.mode = dialogModeSelect.value;
+        state.fontColor = dialogAccentColor.value;
+
+        updateActualMode();
+        applyThemeAndMode();
+        updateLanguage();
+        buildCalendar();
+        buildHistory();
+        updateDisplay();
+        saveState();
+
+        colorDialog.classList.remove('show');
+        langSelect.value = state.lang;
+    });
+
+    // 顶部语言切换
+    langSelect.addEventListener('change', function() {
+        state.lang = this.value;
+        updateLanguage();
+        buildCalendar();
+        saveState();
+        dialogLangSelect.value = state.lang;
+        updateDialogLanguage();
+    });
+
+    // 清空历史
+    clearHistoryBtn.addEventListener('click', function() {
+        state.history = [];
+        buildHistory();
+        saveState();
+    });
+    clearHistoryBtnMobile.addEventListener('click', function() {
+        state.history = [];
+        buildHistory();
+        saveState();
+    });
+
+    // 日历切换
+    prevMonthBtn.addEventListener('click', prevMonth);
+    nextMonthBtn.addEventListener('click', nextMonth);
+    prevMonthMobile.addEventListener('click', prevMonth);
+    nextMonthMobile.addEventListener('click', nextMonth);
+
+    // 移动端跳转
+    document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tab = this.dataset.tab;
+            switchMobileTab(tab);
+        });
+    });
+
+    // 键盘事件
+    document.addEventListener('keydown', (e) => {
+        const key = e.key;
+        if (key >= '0' && key <= '9') { e.preventDefault(); handleAction(key); return; }
+        switch(key) {
+            case '.': e.preventDefault(); handleAction('decimal'); break;
+            case '+': e.preventDefault(); handleAction('add'); break;
+            case '-': e.preventDefault(); handleAction('subtract'); break;
+            case '*': e.preventDefault(); handleAction('multiply'); break;
+            case '/': e.preventDefault(); handleAction('divide'); break;
+            case 'Enter': case '=': e.preventDefault(); handleAction('equals'); break;
+            case 'Backspace': e.preventDefault();
+                if (!state.shouldReset && state.currentInput.length > 1) {
+                    state.currentInput = state.currentInput.slice(0, -1);
+                } else { state.currentInput = '0'; }
+                updateDisplay(); saveState(); break;
+            case 'Escape': case 'c': case 'C': e.preventDefault(); handleAction('clear'); break;
+            case '%': e.preventDefault(); handleAction('percent'); break;
+            default: break;
+        }
+    });
+
+    // ================================================================
+    //  拖动分隔条
+    // ================================================================
+    function initDrag(divider, panel1, panel2, direction) {
+        let isDragging = false;
+        divider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            document.body.style.cursor = direction === 'h' ? 'row-resize' : 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const container = divider.parentElement;
+            const rect = container.getBoundingClientRect();
+            if (direction === 'v') {
+                const x = e.clientX - rect.left;
+                const percent = x / rect.width;
+                if (percent > 0.15 && percent < 0.85) {
+                    panel1.style.flex = percent;
+                    panel2.style.flex = 1 - percent;
+                }
+            } else {
+                const y = e.clientY - rect.top;
+                const percent = y / rect.height;
+                if (percent > 0.15 && percent < 0.85) {
+                    panel1.style.flex = percent;
+                    panel2.style.flex = 1 - percent;
+                }
+            }
+        });
+        document.addEventListener('mouseup', () => {
+            if (isDragging) { isDragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; }
+        });
+    }
+
+    // ================================================================
+    //  启动
+    // ================================================================
+    loadState();
+    applyThemeAndMode();
+    buildNumGrid();
+    buildCalendar();
+    buildHistory();
+    updateLanguage();
+    updateDisplay();
+    switchMobileTab('calendar');
+
+    const leftCol = document.getElementById('leftCol');
+    const rightCol = document.getElementById('rightCol');
+    const panelTopLeft = document.getElementById('panelTopLeft');
+    const panelBottomLeft = document.getElementById('panelBottomLeft');
+    const panelTopRight = document.getElementById('panelTopRight');
+    const panelBottomRight = document.getElementById('panelBottomRight');
+    const dividerH = document.getElementById('dividerH');
+    const dividerH2 = document.getElementById('dividerH2');
+    const dividerV = document.getElementById('dividerV');
+
+    initDrag(dividerV, leftCol, rightCol, 'v');
+    initDrag(dividerH, panelTopLeft, panelBottomLeft, 'h');
+    initDrag(dividerH2, panelTopRight, panelBottomRight, 'h');
+
+    leftCol.style.flex = '3';
+    rightCol.style.flex = '2';
+    panelTopLeft.style.flex = '1';
+    panelBottomLeft.style.flex = '1';
+    panelTopRight.style.flex = '1';
+    panelBottomRight.style.flex = '1';
+
+    console.log('✅ 硒瓜计算器已启动（版本 26.3.0-snapshot2 Build 260819）');
+});
+</script>
+</body>
+</html>
