@@ -36,3 +36,6 @@ For example: `26.0.1` means the first update of the index page in 2026.
 - [GS-talk Forum](https://github.com/HighspeedUnion/GS-talk)
 - [Project Homepage](https://github.com/HighspeedUnion/luck-money-help)
 - [Issue Tracker](https://github.com/HighspeedUnion/luck-money-help/issues)
+
+## Setup
+- [Please Look](https://github.com/HighspeedUnion/GS-talk/issues/1)
