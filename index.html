@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>猿猴图标处理工具 · v26.4.0</title>
+    <style>
+        /* ===== 全局重置 & 响应式 ===== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Segoe UI','PingFang SC',Roboto,sans-serif; background:#f0f4f8; min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; }
+        .container { background:#fff; max-width:860px; width:100%; border-radius:24px; box-shadow:0 20px 60px rgba(0,0,0,0.12); padding:40px 36px; }
+        .header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:4px; }
+        .header h1 { font-size:28px; font-weight:700; color:#1a2332; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+        .header h1 small { font-size:16px; font-weight:400; color:#7e8c9f; margin-left:8px; background:#eef2f7; padding:2px 12px; border-radius:20px; }
+        .version-badge { font-size:15px; font-weight:600; color:#4f8cf7; background:#e1ebfa; padding:4px 14px; border-radius:30px; }
+        .subtitle { color:#5f6f82; font-size:15px; margin:8px 0 24px 0; border-left:4px solid #4f8cf7; padding-left:14px; background:#f7faff; border-radius:0 8px 8px 0; line-height:1.6; }
+        .upload-area { border:2px dashed #cbd5e1; border-radius:16px; padding:48px 20px; text-align:center; cursor:pointer; transition:all 0.25s; background:#fafcff; position:relative; }
+        .upload-area:hover { border-color:#4f8cf7; background:#f5f9ff; }
+        .upload-area.dragover { border-color:#4f8cf7; background:#eaf2fe; transform:scale(1.005); }
+        .upload-area .icon-big { font-size:56px; display:block; margin-bottom:12px; line-height:1; }
+        .upload-area .text { font-size:18px; font-weight:500; color:#1a2332; }
+        .upload-area .hint { font-size:14px; color:#7e8c9f; margin-top:6px; }
+        .upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+        .preview-section { display:none; margin-top:28px; padding:20px; background:#f8faff; border-radius:16px; border:1px solid #e9eef5; }
+        .preview-section.active { display:block; animation:fadeUp 0.35s ease; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .preview-row { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+        .preview-img-wrapper { flex-shrink:0; width:100px; height:100px; border-radius:14px; overflow:hidden; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.06); border:1px solid #e9eef5; display:flex; align-items:center; justify-content:center; background:#fafafa; }
+        .preview-img-wrapper img { max-width:100%; max-height:100%; display:block; object-fit:contain; }
+        .preview-img-wrapper .placeholder { color:#b0bec5; font-size:14px; text-align:center; padding:8px; }
+        .preview-info { flex:1; min-width:160px; }
+        .preview-info .filename { font-weight:600; font-size:17px; color:#1a2332; word-break:break-all; }
+        .preview-info .filesize { font-size:14px; color:#7e8c9f; margin-top:2px; }
+        .preview-info .dims { font-size:14px; color:#4f6f8f; background:#e9f0fa; display:inline-block; padding:2px 14px; border-radius:20px; margin-top:6px; }
+        .btn-remove { background:none; border:none; color:#b0bec5; font-size:22px; cursor:pointer; padding:6px 10px; border-radius:8px; transition:0.2s; line-height:1; }
+        .btn-remove:hover { color:#e74c3c; background:#fef0ee; }
+        .format-selector { display:flex; gap:12px; margin-top:24px; }
+        .format-btn { flex:1; padding:12px; border:2px solid #d0d8e4; border-radius:12px; background:#f8faff; font-size:16px; font-weight:600; color:#4a5a6e; cursor:pointer; transition:all 0.2s; text-align:center; }
+        .format-btn.active { border-color:#4f8cf7; background:#e1ebfa; color:#1a4f8f; box-shadow:0 0 0 3px rgba(79,140,247,0.15); }
+        .format-btn:hover { background:#eef4fc; }
+        .format-btn .icon { font-size:22px; display:block; margin-bottom:4px; }
+        .size-section { margin-top:24px; }
+        .size-section .label { font-weight:600; color:#1a2332; font-size:15px; display:flex; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+        .size-section .label .format-badge { background:#4f8cf7; color:#fff; padding:2px 14px; border-radius:20px; font-size:13px; font-weight:500; }
+        .size-grid { display:flex; flex-wrap:wrap; gap:10px; }
+        .size-chip { display:flex; align-items:center; gap:6px; background:#f1f5f9; padding:6px 14px 6px 12px; border-radius:30px; font-size:14px; font-weight:500; color:#1a2332; cursor:pointer; transition:all 0.2s; border:2px solid transparent; user-select:none; }
+        .size-chip:hover { background:#e6edf6; }
+        .size-chip.active { background:#e1ebfa; border-color:#4f8cf7; color:#1a4f8f; }
+        .size-chip input[type="radio"] { display:none; }
+        .size-chip .check-mark { display:inline-block; width:18px; height:18px; border-radius:50%; border:2px solid #b0c4d8; text-align:center; line-height:16px; font-size:12px; color:white; transition:0.2s; flex-shrink:0; }
+        .size-chip.active .check-mark { background:#4f8cf7; border-color:#4f8cf7; }
+        .size-chip .check-mark::after { content:"✓"; opacity:0; transition:0.2s; }
+        .size-chip.active .check-mark::after { opacity:1; }
+        .actions { margin-top:28px; display:flex; gap:14px; flex-wrap:wrap; }
+        .btn { padding:12px 32px; border:none; border-radius:12px; font-size:16px; font-weight:600; cursor:pointer; transition:all 0.25s; display:inline-flex; align-items:center; gap:8px; flex:1 1 auto; justify-content:center; }
+        .btn-primary { background:#4f8cf7; color:white; box-shadow:0 4px 14px rgba(79,140,247,0.35); }
+        .btn-primary:hover { background:#3a7ae8; transform:translateY(-2px); box-shadow:0 8px 24px rgba(79,140,247,0.40); }
+        .btn-primary:disabled { background:#b0c8f0; box-shadow:none; transform:none; cursor:not-allowed; }
+        .btn-secondary { background:#eef2f7; color:#1a2332; }
+        .btn-secondary:hover { background:#e2e8f0; }
+        .status { margin-top:16px; font-size:14px; color:#5f6f82; min-height:24px; display:flex; align-items:center; gap:8px; }
+        .status .spinner { display:none; width:20px; height:20px; border:3px solid #e9eef5; border-top-color:#4f8cf7; border-radius:50%; animation:spin 0.7s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        .status .spinner.active { display:inline-block; }
+        .status .msg { flex:1; }
+        .status .msg.error { color:#e74c3c; }
+        .status .msg.success { color:#27ae60; }
+        .footer-version { margin-top:20px; text-align:center; font-size:13px; color:#b0bec5; border-top:1px solid #e9eef5; padding-top:16px; letter-spacing:0.5px; }
+        .footer-version strong { color:#7e8c9f; }
+        @media (max-width:600px) {
+            .container { padding:24px 18px; }
+            .header h1 { font-size:22px; }
+            .header h1 small { font-size:13px; }
+            .upload-area { padding:32px 16px; }
+            .upload-area .icon-big { font-size:40px; }
+            .preview-row { flex-direction:column; align-items:flex-start; }
+            .preview-img-wrapper { width:80px; height:80px; }
+            .actions { flex-direction:column; }
+            .btn { width:100%; justify-content:center; }
+            .size-grid { gap:8px; }
+            .size-chip { font-size:13px; padding:5px 12px 5px 10px; }
+            .format-selector { flex-direction:column; }
+        }
+        @media (max-width:400px) {
+            .container { padding:16px 12px; }
+            .upload-area .text { font-size:15px; }
+        }
+        @media (orientation:landscape) and (max-height:500px) {
+            .upload-area { padding:24px 20px; }
+            .upload-area .icon-big { font-size:32px; }
+            .preview-img-wrapper { width:60px; height:60px; }
+            .container { padding:20px; }
+        }
+        ::-webkit-scrollbar { width:6px; height:6px; }
+        ::-webkit-scrollbar-track { background:#f1f5f9; border-radius:10px; }
+        ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
+        ::-webkit-scrollbar-thumb:hover { background:#a0b4c8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐒 猿猴图标处理工具 <small>v26.4.0</small></h1>
+            <span class="version-badge">⚡ 极速转换</span>
+        </div>
+        <div class="subtitle">上传 PNG / JPG / GIF / ICO / ICNS → 一键转为 ICO · ICNS · PNG（单选尺寸）</div>
+
+        <div class="upload-area" id="uploadArea">
+            <span class="icon-big">📤</span>
+            <div class="text">点击或拖拽上传图片</div>
+            <div class="hint">支持 PNG · JPG · GIF · ICO · ICNS · 最大 10MB</div>
+            <input type="file" id="fileInput" accept="image/*" />
+        </div>
+
+        <div class="preview-section" id="previewSection">
+            <div class="preview-row">
+                <div class="preview-img-wrapper" id="previewWrapper">
+                    <img id="previewImg" src="" alt="预览" style="display:none;" />
+                    <span class="placeholder" id="previewPlaceholder">预览不可用</span>
+                </div>
+                <div class="preview-info">
+                    <div class="filename" id="fileName">image.png</div>
+                    <div class="filesize" id="fileSize">0 KB</div>
+                    <div class="dims" id="fileDims">—</div>
+                </div>
+                <button class="btn-remove" id="removeBtn">✕</button>
+            </div>
+        </div>
+
+        <div class="format-selector" id="formatSelector">
+            <div class="format-btn active" data-format="ico">
+                <span class="icon">🪟</span> ICO (Windows)
+            </div>
+            <div class="format-btn" data-format="icns">
+                <span class="icon">🍎</span> ICNS (macOS/iOS)
+            </div>
+            <div class="format-btn" data-format="png">
+                <span class="icon">🐧</span> PNG (Linux/Android)
+            </div>
+        </div>
+
+        <div class="size-section">
+            <div class="label">
+                📐 选择输出尺寸（单选）
+                <span class="format-badge" id="formatBadge">ICO</span>
+            </div>
+            <div class="size-grid" id="sizeGrid"></div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" id="convertBtn" disabled>⚡ 转换并下载</button>
+            <button class="btn btn-secondary" id="resetBtn">🔄 重置</button>
+        </div>
+
+        <div class="status">
+            <span class="spinner" id="spinner"></span>
+            <span class="msg" id="statusMsg">就绪，请上传图片</span>
+        </div>
+
+        <div class="footer-version">
+            <strong>猿猴图标处理工具</strong> · v26.4.0 · 全平台图标转换 · 纯本地处理
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ========== DOM 引用 ==========
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const previewSection = document.getElementById('previewSection');
+            const previewImg = document.getElementById('previewImg');
+            const previewPlaceholder = document.getElementById('previewPlaceholder');
+            const previewWrapper = document.getElementById('previewWrapper');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const fileDims = document.getElementById('fileDims');
+            const removeBtn = document.getElementById('removeBtn');
+            const sizeGrid = document.getElementById('sizeGrid');
+            const convertBtn = document.getElementById('convertBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const spinner = document.getElementById('spinner');
+            const statusMsg = document.getElementById('statusMsg');
+            const formatSelector = document.getElementById('formatSelector');
+            const formatBadge = document.getElementById('formatBadge');
+
+            // ========== 状态 ==========
+            const state = {
+                file: null,
+                imageData: null,
+                selectedSize: null,
+                currentFormat: 'ico',
+                isConverting: false,
+            };
+
+            // ========== 格式配置 ==========
+            const FORMAT_CONFIG = {
+                ico: { label: 'ICO', sizes: [16,24,32,48,64,128,256], defaultSize: 16, extension: 'ico', mime: 'image/x-icon' },
+                icns: { label: 'ICNS', sizes: [16,32,64,128,256,512,1024], defaultSize: 16, extension: 'icns', mime: 'application/octet-stream' },
+                png: { label: 'PNG', sizes: [16,24,32,48,64,128,256,512,1024], defaultSize: 16, extension: 'png', mime: 'image/png' }
+            };
+            const MAX_DIMENSION = 4096;
+
+            // ========== 渲染尺寸（单选）—— 修复交互 ==========
+            function renderSizes(format) {
+                const config = FORMAT_CONFIG[format];
+                const allSizes = config.sizes;
+                const defaultSize = config.defaultSize;
+
+                // 重置选中
+                state.selectedSize = null;
+                sizeGrid.innerHTML = '';
+
+                allSizes.forEach(size => {
+                    const chip = document.createElement('label');
+                    chip.className = 'size-chip';
+                    const isActive = (size === defaultSize);
+                    if (isActive) {
+                        chip.classList.add('active');
+                        state.selectedSize = size;
+                    }
+                    chip.innerHTML = `
+                        <span class="check-mark"></span>
+                        ${size}×${size}
+                        <input type="radio" name="sizeRadio" value="${size}" ${isActive ? 'checked' : ''} />
+                    `;
+                    const radio = chip.querySelector('input[type="radio"]');
+
+                    // 监听 radio 的 change 事件（当点击 chip 触发 radio 选中时，会触发该事件）
+                    radio.addEventListener('change', function(e) {
+                        e.stopPropagation();
+                        if (this.checked) {
+                            // 取消所有 chip 的 active
+                            document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('active'));
+                            chip.classList.add('active');
+                            state.selectedSize = parseInt(this.value);
+                            updateConvertBtn();
+                        }
+                    });
+
+                    // 点击 chip 时，手动触发 radio 的 click（或设置 checked 并触发 change）
+                    chip.addEventListener('click', function(e) {
+                        // 如果点击的是内部的 label 本身，可能会触发两次，但 radio 的 change 只会触发一次
+                        // 我们手动触发 radio 的 click，确保选中
+                        const radio = this.querySelector('input[type="radio"]');
+                        if (!radio.checked) {
+                            radio.checked = true;
+                            // 手动触发 change 事件（因为 click 不会自动触发 change）
+                            const evt = new Event('change', { bubbles: true });
+                            radio.dispatchEvent(evt);
+                        }
+                    });
+
+                    sizeGrid.appendChild(chip);
+                });
+
+                formatBadge.textContent = config.label;
+                updateConvertBtn();
+            }
+
+            // ========== 切换格式 ==========
+            function switchFormat(format) {
+                if (format === state.currentFormat) return;
+                state.currentFormat = format;
+                // 更新按钮激活样式
+                document.querySelectorAll('.format-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.format === format);
+                });
+                renderSizes(format);
+                setStatus(`已切换到 ${FORMAT_CONFIG[format].label} 格式`, '');
+            }
+
+            // ========== 辅助函数 ==========
+            function formatSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+            function setStatus(msg, type) {
+                statusMsg.textContent = msg;
+                statusMsg.className = 'msg' + (type ? ' ' + type : '');
+            }
+            function setSpinner(show) {
+                spinner.classList.toggle('active', show);
+            }
+            function updateConvertBtn() {
+                const hasImage = !!state.imageData;
+                const hasSize = state.selectedSize !== null;
+                convertBtn.disabled = !(hasImage && hasSize && !state.isConverting);
+            }
+
+            // ========== 图像处理函数（压缩保留） ==========
+            function resizeImageData(srcData, srcW, srcH, dstW, dstH) {
+                if (!srcData || srcData.length === 0) throw new Error('源图像数据为空');
+                if (srcW <= 0 || srcH <= 0 || dstW <= 0 || dstH <= 0) throw new Error('无效尺寸');
+                const expectedLen = srcW * srcH * 4;
+                if (srcData.length !== expectedLen) throw new Error(`数据长度不匹配：实际 ${srcData.length}，预期 ${expectedLen}`);
+                const canvas = document.createElement('canvas');
+                canvas.width = dstW; canvas.height = dstH;
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = srcW; tempCanvas.height = srcH;
+                const tempCtx = tempCanvas.getContext('2d');
+                const imageData = new ImageData(new Uint8ClampedArray(srcData), srcW, srcH);
+                tempCtx.putImageData(imageData, 0, 0);
+                ctx.drawImage(tempCanvas, 0, 0, dstW, dstH);
+                return ctx.getImageData(0, 0, dstW, dstH);
+            }
+            function generateBMPData(imageData, width, height) {
+                const data = imageData.data;
+                const rowSize = Math.floor((width * 32 + 31) / 32) * 4;
+                const pixelDataSize = rowSize * height;
+                const andMaskRowSize = Math.floor((width + 31) / 32) * 4;
+                const andMaskSize = andMaskRowSize * height;
+                const headerSize = 40;
+                const totalSize = headerSize + pixelDataSize + andMaskSize;
+                const buffer = new ArrayBuffer(totalSize);
+                const dv = new DataView(buffer);
+                let pos = 0;
+                dv.setUint32(pos, headerSize, true); pos += 4;
+                dv.setInt32(pos, width, true); pos += 4;
+                dv.setInt32(pos, height * 2, true); pos += 4;
+                dv.setUint16(pos, 1, true); pos += 2;
+                dv.setUint16(pos, 32, true); pos += 2;
+                dv.setUint32(pos, 0, true); pos += 4;
+                dv.setUint32(pos, 0, true); pos += 4;
+                dv.setInt32(pos, 0, true); pos += 4;
+                dv.setInt32(pos, 0, true); pos += 4;
+                dv.setUint32(pos, 0, true); pos += 4;
+                dv.setUint32(pos, 0, true); pos += 4;
+                const pixelOffset = pos;
+                for (let y = height - 1; y >= 0; y--) {
+                    const rowOffset = y * width * 4;
+                    const dstOffset = pixelOffset + (height - 1 - y) * rowSize;
+                    for (let x = 0; x < width; x++) {
+                        const srcIdx = rowOffset + x * 4;
+                        const dstIdx = dstOffset + x * 4;
+                        dv.setUint8(dstIdx, data[srcIdx + 2]);
+                        dv.setUint8(dstIdx + 1, data[srcIdx + 1]);
+                        dv.setUint8(dstIdx + 2, data[srcIdx]);
+                        dv.setUint8(dstIdx + 3, data[srcIdx + 3]);
+                    }
+                }
+                pos += pixelDataSize;
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < andMaskRowSize; x++) dv.setUint8(pos + y * andMaskRowSize + x, 0);
+                }
+                return buffer;
+            }
+            function generateICO(imageData, size) {
+                const scaled = resizeImageData(imageData.data, imageData.width, imageData.height, size, size);
+                const bmpData = generateBMPData(scaled, size, size);
+                const iconDirSize = 6 + 16;
+                const totalSize = iconDirSize + bmpData.byteLength;
+                const buffer = new ArrayBuffer(totalSize);
+                const dv = new DataView(buffer);
+                let pos = 0;
+                dv.setUint16(pos, 0, true); pos += 2;
+                dv.setUint16(pos, 1, true); pos += 2;
+                dv.setUint16(pos, 1, true); pos += 2;
+                const w = size === 256 ? 0 : size;
+                const h = size === 256 ? 0 : size;
+                dv.setUint8(pos, w); pos += 1;
+                dv.setUint8(pos, h); pos += 1;
+                dv.setUint8(pos, 0); pos += 1;
+                dv.setUint8(pos, 0); pos += 1;
+                dv.setUint16(pos, 1, true); pos += 2;
+                dv.setUint16(pos, 32, true); pos += 2;
+                dv.setUint32(pos, bmpData.byteLength, true); pos += 4;
+                dv.setUint32(pos, iconDirSize, true); pos += 4;
+                const data = new Uint8Array(bmpData);
+                for (let i = 0; i < data.length; i++) dv.setUint8(pos + i, data[i]);
+                return buffer;
+            }
+            async function generateICNS(imageData, size) {
+                const SIZE_MAP = { 16:'icp4',32:'icp5',64:'icp6',128:'icp7',256:'icp8',512:'icp9',1024:'icp10' };
+                const type = SIZE_MAP[size];
+                if (!type) throw new Error(`不支持的 ICNS 尺寸: ${size}`);
+                const scaled = resizeImageData(imageData.data, imageData.width, imageData.height, size, size);
+                const blob = await imageDataToPNGBlob(scaled);
+                const data = await blob.arrayBuffer();
+                const chunkSize = 8 + data.byteLength;
+                const totalSize = 8 + chunkSize;
+                const buffer = new ArrayBuffer(totalSize);
+                const dv = new DataView(buffer);
+                let pos = 0;
+                dv.setUint32(pos, 0x69636e73, false); pos += 4;
+                dv.setUint32(pos, totalSize, false); pos += 4;
+                let typeCode = 0;
+                for (let i = 0; i < 4; i++) typeCode = (typeCode << 8) | type.charCodeAt(i);
+                dv.setUint32(pos, typeCode, false); pos += 4;
+                dv.setUint32(pos, chunkSize, false); pos += 4;
+                const bytes = new Uint8Array(data);
+                for (let i = 0; i < bytes.length; i++) dv.setUint8(pos + i, bytes[i]);
+                return buffer;
+            }
+            async function generatePNG(imageData, size) {
+                const scaled = resizeImageData(imageData.data, imageData.width, imageData.height, size, size);
+                const blob = await imageDataToPNGBlob(scaled);
+                return await blob.arrayBuffer();
+            }
+            function imageDataToPNGBlob(imageData) {
+                const canvas = document.createElement('canvas');
+                canvas.width = imageData.width;
+                canvas.height = imageData.height;
+                const ctx = canvas.getContext('2d');
+                ctx.putImageData(imageData, 0, 0);
+                return new Promise((resolve) => { canvas.toBlob((blob) => resolve(blob), 'image/png'); });
+            }
+            function getImageDataFromImage(img) {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width; canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                return ctx.getImageData(0, 0, img.width, img.height);
+            }
+
+            // ========== ICO/ICNS 解析器（提取最大图像） ==========
+            function parseICO(buffer) {
+                const dv = new DataView(buffer);
+                if (dv.getUint16(0, true) !== 0 || dv.getUint16(2, true) !== 1) throw new Error('无效的 ICO 文件');
+                const count = dv.getUint16(4, true);
+                if (count === 0) throw new Error('ICO 文件中没有图像');
+                let bestIdx = 0, bestSize = 0;
+                for (let i = 0; i < count; i++) {
+                    const offset = 6 + i * 16;
+                    const w = dv.getUint8(offset) || 256;
+                    const h = dv.getUint8(offset + 1) || 256;
+                    const size = w * h;
+                    if (size > bestSize) { bestSize = size; bestIdx = i; }
+                }
+                const entryOff = 6 + bestIdx * 16;
+                const imageOffset = dv.getUint32(entryOff + 12, true);
+                const imageSize = dv.getUint32(entryOff + 8, true);
+                const imageBuffer = buffer.slice(imageOffset, imageOffset + imageSize);
+                const pngSig = new Uint8Array(imageBuffer.slice(0, 8));
+                if (pngSig[0] === 0x89 && pngSig[1] === 0x50 && pngSig[2] === 0x4E && pngSig[3] === 0x47) {
+                    return new Blob([imageBuffer], { type: 'image/png' });
+                } else {
+                    return parseBMP(imageBuffer);
+                }
+            }
+            function parseBMP(buffer) {
+                const dv = new DataView(buffer);
+                const headerSize = dv.getUint32(14, true);
+                if (headerSize !== 40) throw new Error('不支持的 BMP 头');
+                const width = dv.getInt32(18, true);
+                const height = dv.getInt32(22, true);
+                const bitCount = dv.getUint16(28, true);
+                const compression = dv.getUint32(30, true);
+                if (compression !== 0) throw new Error('不支持的压缩 BMP');
+                if (bitCount !== 32 && bitCount !== 24) throw new Error('仅支持 24/32 位 BMP');
+                const dataOffset = dv.getUint32(10, true);
+                const rowSize = Math.floor((width * bitCount + 31) / 32) * 4;
+                const pixelDataSize = rowSize * Math.abs(height);
+                const pixelData = new Uint8Array(buffer, dataOffset, pixelDataSize);
+                const canvas = document.createElement('canvas');
+                canvas.width = width; canvas.height = Math.abs(height);
+                const ctx = canvas.getContext('2d');
+                const imageData = ctx.createImageData(width, Math.abs(height));
+                const data = imageData.data;
+                const isTopDown = height < 0;
+                const h = Math.abs(height);
+                for (let y = 0; y < h; y++) {
+                    const srcRow = isTopDown ? y * rowSize : (h - 1 - y) * rowSize;
+                    const dstRow = y * width * 4;
+                    for (let x = 0; x < width; x++) {
+                        const srcIdx = srcRow + x * (bitCount / 8);
+                        const dstIdx = dstRow + x * 4;
+                        data[dstIdx] = pixelData[srcIdx + 2];
+                        data[dstIdx + 1] = pixelData[srcIdx + 1];
+                        data[dstIdx + 2] = pixelData[srcIdx];
+                        data[dstIdx + 3] = bitCount === 32 ? pixelData[srcIdx + 3] : 255;
+                    }
+                }
+                ctx.putImageData(imageData, 0, 0);
+                return new Promise(resolve => { canvas.toBlob(blob => resolve(blob), 'image/png'); });
+            }
+            function parseICNS(buffer) {
+                const dv = new DataView(buffer);
+                if (dv.getUint32(0, false) !== 0x69636e73) throw new Error('无效的 ICNS 文件');
+                const totalSize = dv.getUint32(4, false);
+                let pos = 8;
+                let bestBlob = null, bestSize = 0;
+                const pngTypes = ['icp4','icp5','icp6','icp7','icp8','icp9','icp10'];
+                while (pos < totalSize) {
+                    const type = dv.getUint32(pos, false);
+                    const chunkSize = dv.getUint32(pos + 4, false);
+                    const dataStart = pos + 8;
+                    const dataEnd = dataStart + (chunkSize - 8);
+                    if (dataEnd > totalSize) break;
+                    const typeStr = String.fromCharCode((type >> 24) & 0xFF, (type >> 16) & 0xFF, (type >> 8) & 0xFF, type & 0xFF);
+                    if (pngTypes.includes(typeStr)) {
+                        const chunkData = buffer.slice(dataStart, dataEnd);
+                        const map = { icp4:16, icp5:32, icp6:64, icp7:128, icp8:256, icp9:512, icp10:1024 };
+                        const size = map[typeStr] || 0;
+                        if (size > bestSize) { bestSize = size; bestBlob = new Blob([chunkData], { type: 'image/png' }); }
+                    }
+                    pos += chunkSize;
+                }
+                if (!bestBlob) throw new Error('未找到 PNG 图像数据');
+                return bestBlob;
+            }
+
+            // ========== 加载图片（支持多格式） ==========
+            async function loadImage(file) {
+                if (!file) return;
+                const ext = file.name.split('.').pop().toLowerCase();
+                const validExt = ['png','jpg','jpeg','gif','ico','icns'];
+                if (!validExt.includes(ext)) {
+                    setStatus('不支持的文件格式，请上传 PNG/JPG/GIF/ICO/ICNS', 'error');
+                    return;
+                }
+                if (file.size > 10 * 1024 * 1024) {
+                    setStatus('文件大小超过 10MB 限制', 'error');
+                    return;
+                }
+                state.file = file;
+
+                try {
+                    let imageBlob = null;
+                    if (ext === 'ico' || ext === 'icns') {
+                        const url = URL.createObjectURL(file);
+                        try {
+                            const img = await loadImageFromURL(url);
+                            const imageData = getImageDataFromImage(img);
+                            state.imageData = { width: img.width, height: img.height, data: imageData.data };
+                            showPreview(url, img.width, img.height);
+                            URL.revokeObjectURL(url);
+                            setStatus(`已加载: ${file.name} (${img.width}×${img.height})`, 'success');
+                            updateConvertBtn();
+                            return;
+                        } catch (e) {
+                            URL.revokeObjectURL(url);
+                            const buffer = await file.arrayBuffer();
+                            if (ext === 'ico') imageBlob = await parseICO(buffer);
+                            else if (ext === 'icns') imageBlob = parseICNS(buffer);
+                            if (!imageBlob) throw new Error('解析失败');
+                            const newUrl = URL.createObjectURL(imageBlob);
+                            const img = await loadImageFromURL(newUrl);
+                            const imageData = getImageDataFromImage(img);
+                            state.imageData = { width: img.width, height: img.height, data: imageData.data };
+                            showPreview(newUrl, img.width, img.height);
+                            URL.revokeObjectURL(newUrl);
+                            setStatus(`已加载: ${file.name} (解析提取, ${img.width}×${img.height})`, 'success');
+                            updateConvertBtn();
+                            return;
+                        }
+                    } else {
+                        const url = URL.createObjectURL(file);
+                        const img = await loadImageFromURL(url);
+                        const imageData = getImageDataFromImage(img);
+                        state.imageData = { width: img.width, height: img.height, data: imageData.data };
+                        showPreview(url, img.width, img.height);
+                        URL.revokeObjectURL(url);
+                        setStatus(`已加载: ${file.name} (${img.width}×${img.height})`, 'success');
+                        updateConvertBtn();
+                    }
+                } catch (err) {
+                    console.error(err);
+                    setStatus('图片加载失败: ' + err.message, 'error');
+                }
+            }
+
+            function loadImageFromURL(url) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = () => reject(new Error('Image 加载失败'));
+                    img.src = url;
+                });
+            }
+
+            function showPreview(url, w, h) {
+                previewImg.src = url;
+                previewImg.style.display = 'block';
+                previewPlaceholder.style.display = 'none';
+                previewSection.classList.add('active');
+                fileName.textContent = state.file.name;
+                fileSize.textContent = formatSize(state.file.size);
+                fileDims.textContent = `${w} × ${h}`;
+            }
+
+            function removeImage() {
+                state.file = null;
+                state.imageData = null;
+                previewSection.classList.remove('active');
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+                previewPlaceholder.style.display = 'block';
+                previewPlaceholder.textContent = '预览不可用';
+                fileInput.value = '';
+                setStatus('已移除图片', '');
+                updateConvertBtn();
+            }
+
+            // ========== 执行转换 ==========
+            async function doConvert() {
+                if (!state.imageData || state.selectedSize === null || state.isConverting) return;
+                state.isConverting = true;
+                setSpinner(true);
+                setStatus('正在转换...', '');
+                convertBtn.disabled = true;
+                await new Promise(r => setTimeout(r, 50));
+                try {
+                    const format = state.currentFormat;
+                    const size = state.selectedSize;
+                    let buffer;
+                    if (format === 'ico') buffer = generateICO(state.imageData, size);
+                    else if (format === 'icns') buffer = await generateICNS(state.imageData, size);
+                    else buffer = await generatePNG(state.imageData, size);
+                    const config = FORMAT_CONFIG[format];
+                    const blob = new Blob([buffer], { type: config.mime });
+                    const url = URL.createObjectURL(blob);
+                    const baseName = state.file ? state.file.name.replace(/\.[^.]+$/, '') : 'icon';
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${baseName}_${size}.${config.extension}`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(url), 5000);
+                    setStatus(`✅ 转换成功！已下载 ${size}×${size} 的 ${config.label} 文件`, 'success');
+                } catch (err) {
+                    console.error(err);
+                    setStatus('❌ 转换失败: ' + (err.message || '未知错误'), 'error');
+                } finally {
+                    state.isConverting = false;
+                    setSpinner(false);
+                    updateConvertBtn();
+                }
+            }
+
+            // ========== 事件绑定 ==========
+            // 格式切换
+            formatSelector.addEventListener('click', function(e) {
+                const btn = e.target.closest('.format-btn');
+                if (btn) {
+                    const format = btn.dataset.format;
+                    if (format && format !== state.currentFormat) {
+                        switchFormat(format);
+                    }
+                }
+            });
+
+            // 文件上传
+            fileInput.addEventListener('change', function(e) {
+                if (this.files && this.files.length > 0) loadImage(this.files[0]);
+            });
+            uploadArea.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+            uploadArea.addEventListener('dragleave', function(e) { e.preventDefault(); this.classList.remove('dragover'); });
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files && files.length > 0) {
+                    const file = files[0];
+                    loadImage(file);
+                    const dt = new DataTransfer();
+                    dt.items.add(file);
+                    fileInput.files = dt.files;
+                }
+            });
+
+            removeBtn.addEventListener('click', removeImage);
+            resetBtn.addEventListener('click', function() {
+                removeImage();
+                const format = state.currentFormat;
+                const defaultSize = FORMAT_CONFIG[format].defaultSize;
+                state.selectedSize = null;
+                const chips = sizeGrid.querySelectorAll('.size-chip');
+                chips.forEach(chip => {
+                    const radio = chip.querySelector('input[type="radio"]');
+                    const val = parseInt(radio.value);
+                    if (val === defaultSize) {
+                        radio.checked = true;
+                        chip.classList.add('active');
+                        state.selectedSize = val;
+                    } else {
+                        radio.checked = false;
+                        chip.classList.remove('active');
+                    }
+                });
+                updateConvertBtn();
+                setStatus('已重置', '');
+            });
+
+            convertBtn.addEventListener('click', doConvert);
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !convertBtn.disabled) doConvert();
+            });
+
+            // ========== 初始化 ==========
+            renderSizes('ico');
+            updateConvertBtn();
+            setStatus('就绪，请上传图片', '');
+            console.log('🐒 猿猴图标处理工具 v26.4.0 已启动');
+        })();
+    </script>
+</body>
+</html>
