@@ -36,3 +36,6 @@
 - [GS-talk 論壇](https://github.com/HighspeedUnion/GS-talk)
 - [專案首頁](https://github.com/HighspeedUnion/luck-money-help)
 - [問題回報](https://github.com/HighspeedUnion/luck-money-help/issues)
+
+## 安装
+- [This](https://github.com/HighspeedUnion/GS-talk/issues/1)
