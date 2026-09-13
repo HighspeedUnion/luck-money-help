@@ -1,4 +1,4 @@
-If you want to see more language please help us！
+If you want to see more language please help us！  
 如果你想查看繁體中文版，請點擊[這裡]（https://github.com/HighspeedUnion/luck-money-help/blob/main/READMEzh-TW.md)
 # luck-money-help
 
