@@ -12,6 +12,7 @@
 
 例如：`26.0.1` 表示 2026 年第一次更新的 index 页版本。
 
+ID请见[这里]（https://github.com/HighspeedUnion/luck-money-help/blob/main/App%20ID.md）
 ---
 
 ## 🔗 相关链接
