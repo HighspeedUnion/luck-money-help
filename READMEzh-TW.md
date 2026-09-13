@@ -4,12 +4,6 @@
 
 ---
 
-## ❓ 為什麼更新這麼慢？
-
-請看[此帖子](https://github.com/HighspeedUnion/luck-money-help/issues/1#issue-4945615535)瞭解詳情。
-
----
-
 ## 📌 軟體命名體系
 
 所有軟體命名遵循以下規則：
@@ -18,16 +12,7 @@
 
 例如：`26.0.1` 表示 2026 年第一次更新的 index 頁版本。
 
----
-
-## 📅 更新日誌
-
-### 2026-08-05 Hubupdate
-- 正式將 **Wike** 與 **Learn** 遷移至 [GS-talk](https://github.com/HighspeedUnion/GS-talk)。
-
-### 2026-08-18 發佈計算機
-- 發佈首個計算機版本（v26.3.0），支援四面板拖動、多語言、日曆、歷史記錄等特性。
-- 下載位址：[GitHub Releases](https://github.com/HighspeedUnion/luck-money-help/releases)
+App ID:[this]（https://github.com/HighspeedUnion/luck-money-help/blob/main/App%20ID.md）
 
 ---
 
