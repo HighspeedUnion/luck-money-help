@@ -8,13 +8,7 @@ If you want to see more language please help us！
 
 ## 📌 软件命名体系
 
-所有软件命名遵循以下规则：
-
-`年 + 软件编号 + 版本号`
-
-例如：`26.0.1` 表示 2026 年第一次更新的 index 页版本。
-
-ID请见[这里]（https://github.com/HighspeedUnion/luck-money-help/blob/main/App%20ID.md）
+原有ID过于麻烦，现已废弃，现在遵循年+大版本+小版本
 ---
 
 ## 🔗 相关链接
