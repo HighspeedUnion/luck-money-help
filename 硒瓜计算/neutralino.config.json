@@ -1,0 +1,42 @@
+{
+  "applicationId": "com.highspeedunion.calculator",
+  "version": "26.3.0.1000",
+  "defaultMode": "window",
+  "documentRoot": "/resources/",
+  "url": "/",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "tokenSecurity": "one-time",
+  "logging": {
+    "enabled": true,
+    "writeToLogFile": true
+  },
+  "nativeAllowList": [
+    "app.*",
+    "os.*",
+    "filesystem.*",
+    "window.*",
+    "debug.*"
+  ],
+  "modes": {
+    "window": {
+      "title": "硒瓜计算器",
+      "width": 1100,
+      "height": 750,
+      "minWidth": 800,
+      "minHeight": 600,
+      "fullScreen": false,
+      "alwaysOnTop": false,
+      "icon": "/resources/icons/appIcon.png",
+      "enableInspector": true,
+      "exitProcessOnClose": true
+    }
+  },
+  "cli": {
+    "binaryName": "硒瓜计算器",
+    "resourcesPath": "/resources/",
+    "extensionsPath": "/extensions/",
+    "binaryVersion": "6.9.0",
+    "clientVersion": "6.9.0"
+  }
+}
