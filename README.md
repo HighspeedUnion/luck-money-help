@@ -19,3 +19,5 @@ If you want to see more language please help us！
 
 ## 安装
 - [请看这里](https://github.com/HighspeedUnion/GS-talk/issues/1)
+
+## 官网正在构建中，你可以从[这里](https://highspeedunion.github.io/luck-money-help/)查看。
