@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="plugin-id" content="minesweeper">
+<meta name="plugin-name" content="扫雷">
+<meta name="plugin-version" content="1.0.0">
+<meta name="plugin-author" content="HighspeedUnion">
+<meta name="plugin-description" content="经典扫雷游戏，支持三级难度、标记模式、长按插旗">
+<meta name="plugin-icon" content="💣">
+<meta name="plugin-theme-aware" content="true">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="ms-app">
+    <div class="ms-topbar">
+        <select class="ms-difficulty">
+            <option value="easy">初级 9 × 9</option>
+            <option value="medium">中级 16 × 16</option>
+            <option value="hard">高级 16 × 30</option>
+        </select>
+        <button class="ms-mode-btn" type="button">🚩 标记模式：关</button>
+        <button class="ms-reset" type="button">🔄 重开</button>
+    </div>
+    <div class="ms-status">
+        <div class="ms-mine-count">💣 <span id="msMines">10</span></div>
+        <div class="ms-face" id="msFace">😊</div>
+        <div class="ms-time">⏱ <span id="msTime">0</span></div>
+    </div>
+    <div class="ms-board-wrapper">
+        <div class="ms-board" id="msBoard"></div>
+    </div>
+    <div class="ms-message" id="msMessage"></div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
