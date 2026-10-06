@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>时钟</title>
+<style>
+body{margin:0;background:var(--bg-panel-dark,#2d3e4f);color:var(--text-primary,#fff);font-family:system-ui,sans-serif}
+.wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;gap:10px}
+.face{width:min(180px,65%);aspect-ratio:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))}
+.time{font-size:clamp(22px,6vw,36px);font-weight:bold;font-variant-numeric:tabular-nums;letter-spacing:2px}
+.date{font-size:13px;color:var(--text-secondary,#b0b0b0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg class="face" viewBox="0 0 200 200">
+<circle cx="100" cy="100" r="96" fill="none" stroke="var(--border-color,#3a5066)" stroke-width="2"/>
+<circle cx="100" cy="100" r="90" fill="none" stroke="var(--border-color,#3a5066)" stroke-width="0.5" opacity="0.5"/>
+<g id="ticks"></g>
+<line id="hour" x1="100" y1="100" x2="100" y2="55" stroke="var(--text-primary,#fff)" stroke-width="5" stroke-linecap="round"/>
+<line id="minute" x1="100" y1="100" x2="100" y2="32" stroke="var(--text-primary,#fff)" stroke-width="3" stroke-linecap="round"/>
+<line id="second" x1="100" y1="115" x2="100" y2="25" stroke="var(--accent,#f39c12)" stroke-width="1.5" stroke-linecap="round"/>
+<circle cx="100" cy="100" r="5" fill="var(--accent,#f39c12)"/>
+<circle cx="100" cy="100" r="2" fill="var(--bg-panel-dark,#2d3e4f)"/>
+</svg>
+<div class="time" id="t">--:--:--</div>
+<div class="date" id="d">----年--月--日</div>
+</div>
+<script>
+(function(){
+const ticks = document.getElementById('ticks');
+let s = '';
+for(let i=0;i<12;i++){
+    const a=(i*30-90)*Math.PI/180;
+    const x1=100+Math.cos(a)*82,y1=100+Math.sin(a)*82;
+    const x2=100+Math.cos(a)*92,y2=100+Math.sin(a)*92;
+    const w=(i%3===0)?3:1.5;
+    s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--text-primary,#fff)" stroke-width="${w}" stroke-linecap="round"/>`;
+}
+ticks.innerHTML = s;
+function tick(){
+    const now = new Date();
+    const h=now.getHours(),m=now.getMinutes(),sec=now.getSeconds();
+    document.getElementById('t').textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+    const wk=['日','一','二','三','四','五','六'];
+    document.getElementById('d').textContent = now.getFullYear()+'年'+String(now.getMonth()+1).padStart(2,'0')+'月'+String(now.getDate()).padStart(2,'0')+'日 星期'+wk[now.getDay()];
+    const ha=(h%12)*30+m*0.5, ma=m*6+sec*0.1, sa=sec*6;
+    document.getElementById('hour').setAttribute('transform',`rotate(${ha} 100 100)`);
+    document.getElementById('minute').setAttribute('transform',`rotate(${ma} 100 100)`);
+    document.getElementById('second').setAttribute('transform',`rotate(${sa} 100 100)`);
+}
+tick(); setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>

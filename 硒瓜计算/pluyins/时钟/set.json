@@ -1,0 +1,9 @@
+{
+  "id": "clock",
+  "name": "时钟",
+  "version": "1.0.0",
+  "api": "3.0",
+  "author": "HighspeedUnion",
+  "description": "实时时钟表盘，带时针分针秒针",
+  "icon": "🕐"
+}

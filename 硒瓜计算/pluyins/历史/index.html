@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>历史</title>
+<style>
+body{margin:0;background:var(--bg-panel-dark,#2d3e4f);color:var(--text-primary,#fff);font-family:system-ui,sans-serif}
+.wrap{display:flex;flex-direction:column;height:100vh;padding:10px;box-sizing:border-box;gap:8px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.header select{background:#1e2b36;color:#fff;border:1px solid var(--accent,#f39c12);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer}
+.header button{background:transparent;border:1px solid var(--accent,#f39c12);color:var(--accent,#f39c12);border-radius:20px;padding:3px 12px;cursor:pointer;font-size:12px}
+.list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.item{padding:6px 10px;border-bottom:1px solid var(--border-color,#3a5066);cursor:pointer;border-radius:4px}
+.item:hover{background:var(--btn-bg,#3a5066)}
+.expr{color:var(--text-secondary,#b0b0b0);font-size:12px;word-break:break-all}
+.result{font-size:15px;font-weight:500;word-break:break-all}
+.empty{color:var(--text-muted,#5a7a8a);text-align:center;padding:30px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="header">
+<select id="mode">
+<option value="standard">标准</option>
+<option value="detailed">繁</option>
+<option value="simple">简</option>
+</select>
+<button id="clear">清空</button>
+</div>
+<div class="list" id="list"></div>
+</div>
+<script>
+(function(){
+let history = [];
+let mode = 'standard';
+try {
+    const raw = localStorage.getItem('calc_plugin_history');
+    if(raw) history = JSON.parse(raw);
+} catch(e){}
+function fmtTime(ts){
+    const d = new Date(ts);
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+}
+function render(){
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    if(history.length===0){
+        const e = document.createElement('div');
+        e.className = 'empty';
+        e.textContent = '暂无记录';
+        list.appendChild(e);
+        return;
+    }
+    [...history].reverse().forEach(item=>{
+        const d = document.createElement('div');
+        d.className = 'item';
+        if(mode==='simple'){
+            d.innerHTML = `<div class="result">${item.result}</div>`;
+        }else if(mode==='detailed'){
+            d.innerHTML = `<div class="expr">[${fmtTime(item.timestamp)}] ${item.expression} = ${item.result}</div>`;
+        }else{
+            d.innerHTML = item.expression ? `<div class="expr">${item.expression} = ${item.result}</div>` : `<div class="result">${item.result}</div>`;
+        }
+        list.appendChild(d);
+    });
+}
+document.getElementById('mode').addEventListener('change',function(){
+    mode = this.value;
+    render();
+});
+document.getElementById('clear').addEventListener('click',()=>{
+    history = [];
+    try { localStorage.setItem('calc_plugin_history','[]'); } catch(e){}
+    render();
+});
+// 尝试从主程序接收最新记录（受限下不行，全权限下可用）
+try {
+    const raw = localStorage.getItem('calc_history_shared');
+    if(raw){
+        const shared = JSON.parse(raw);
+        if(Array.isArray(shared) && shared.length>0){
+            history = shared;
+            render();
+        }
+    }
+} catch(e){}
+render();
+})();
+</script>
+</body>
+</html>

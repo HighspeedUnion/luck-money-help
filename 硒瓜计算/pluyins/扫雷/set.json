@@ -1,0 +1,9 @@
+{
+  "id": "minesweeper",
+  "name": "扫雷",
+  "version": "1.0.0",
+  "api": "3.0",
+  "author": "HighspeedUnion",
+  "description": "经典扫雷游戏，支持三级难度",
+  "icon": "💣"
+}

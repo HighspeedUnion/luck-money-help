@@ -1,0 +1,9 @@
+{
+  "id": "history",
+  "name": "历史",
+  "version": "1.0.0",
+  "api": "3.0",
+  "author": "HighspeedUnion",
+  "description": "计算历史记录，支持标准/繁/简显示",
+  "icon": "📜"
+}

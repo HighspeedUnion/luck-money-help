@@ -1,0 +1,9 @@
+{
+  "id": "calendar",
+  "name": "日历",
+  "version": "1.0.0",
+  "api": "3.0",
+  "author": "HighspeedUnion",
+  "description": "月历视图，可翻月、选日期",
+  "icon": "📅"
+}

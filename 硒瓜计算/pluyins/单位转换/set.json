@@ -1,0 +1,9 @@
+{
+  "id": "unit-convert",
+  "name": "单位转换",
+  "version": "1.0.0",
+  "api": "3.0",
+  "author": "HighspeedUnion",
+  "description": "长度/重量/温度/面积/体积转换",
+  "icon": "📏"
+}

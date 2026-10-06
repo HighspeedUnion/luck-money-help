@@ -1,0 +1,9 @@
+{
+  "id": "bmi",
+  "name": "BMI",
+  "version": "1.0.0",
+  "api": "3.0",
+  "author": "HighspeedUnion",
+  "description": "BMI 计算，含理想体重与可视化",
+  "icon": "⚖️"
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BMI</title>
+<style>
+body{margin:0;background:var(--bg-panel-dark,#2d3e4f);color:var(--text-primary,#fff);font-family:system-ui,sans-serif}
+.wrap{display:flex;flex-direction:column;gap:8px;padding:14px;height:100vh;box-sizing:border-box;overflow-y:auto}
+.row{display:flex;flex-direction:column;gap:3px}
+.row label{font-size:12px;color:var(--text-secondary,#b0b0b0)}
+.gender{display:flex;gap:6px}
+.gender button{flex:1;padding:8px;background:var(--btn-bg,#3a5066);color:#fff;border:1px solid var(--border-color,#3a5066);border-radius:8px;cursor:pointer;font-size:13px}
+.gender button.active{background:var(--accent,#f39c12);color:#1e2b36;font-weight:bold;border-color:var(--accent,#f39c12)}
+input[type="number"]{padding:9px 10px;background:var(--bg-display,#1e2b36);color:var(--text-primary,#fff);border:1px solid var(--border-color,#3a5066);border-radius:8px;font-size:14px;width:100%;box-sizing:border-box}
+.calc{padding:10px;background:var(--accent,#f39c12);color:#1e2b36;border:none;border-radius:8px;font-weight:bold;font-size:15px;cursor:pointer;margin-top:4px}
+.box{background:var(--bg-display,#1e2b36);border-radius:10px;padding:12px;text-align:center;margin-top:6px}
+.val{font-size:34px;font-weight:bold;color:var(--accent,#f39c12);line-height:1.2}
+.cat{font-size:15px;font-weight:bold;margin-top:2px}
+.thin{color:#3498db}.normal{color:#27ae60}.over{color:#e67e22}.obese{color:#e74c3c}
+.scale{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:8px}
+.scale div{flex:1}
+.info{display:flex;justify-content:space-between;font-size:10px;color:var(--text-secondary,#b0b0b0);margin-top:2px}
+.ideal{font-size:12px;color:var(--text-secondary,#b0b0b0);margin-top:8px}
+.disc{font-size:10px;color:var(--text-muted,#5a7a8a);margin-top:8px;font-style:italic;line-height:1.4}
+.err{color:#e74c3c;font-size:13px;font-weight:bold;padding:8px;border:1px solid #e74c3c;border-radius:8px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="row"><label>性别</label>
+<div class="gender">
+<button id="male" class="active">男</button>
+<button id="female">女</button>
+</div>
+</div>
+<div class="row"><label>身高 (cm)</label><input type="number" id="h" placeholder="170" step="any" inputmode="decimal"></div>
+<div class="row"><label>体重 (kg)</label><input type="number" id="w" placeholder="65" step="any" inputmode="decimal"></div>
+<button class="calc" id="go">计算 BMI</button>
+<div id="out"></div>
+</div>
+<script>
+(function(){
+let gender = 'male';
+document.getElementById('male').addEventListener('click',()=>{gender='male';document.getElementById('male').classList.add('active');document.getElementById('female').classList.remove('active');});
+document.getElementById('female').addEventListener('click',()=>{gender='female';document.getElementById('female').classList.add('active');document.getElementById('male').classList.remove('active');});
+document.getElementById('go').addEventListener('click',()=>{
+    const h = parseFloat(document.getElementById('h').value);
+    const w = parseFloat(document.getElementById('w').value);
+    const out = document.getElementById('out');
+    if(isNaN(h)||isNaN(w)||h<=0||w<=0){ out.innerHTML='<div class="err">⚠️ 请输入有效的身高和体重</div>'; return; }
+    if(h>300){ out.innerHTML='<div class="err">⚠️ 身高超出合理范围</div>'; return; }
+    if(w>500){ out.innerHTML='<div class="err">⚠️ 体重超出合理范围</div>'; return; }
+    const bmi = w/Math.pow(h/100,2);
+    let cat,cls;
+    if(bmi<18.5){cat='偏瘦';cls='thin';}
+    else if(bmi<24){cat='正常';cls='normal';}
+    else if(bmi<28){cat='超重';cls='over';}
+    else{cat='肥胖';cls='obese';}
+    const low = 18.5*Math.pow(h/100,2);
+    const high = 24*Math.pow(h/100,2);
+    out.innerHTML = `<div class="box">
+        <div class="val">${bmi.toFixed(1)}</div>
+        <div class="cat ${cls}">${cat}</div>
+        <div class="scale"><div style="background:#3498db"></div><div style="background:#27ae60"></div><div style="background:#e67e22"></div><div style="background:#e74c3c"></div></div>
+        <div class="info"><span>18.5</span><span>24</span><span>28</span></div>
+        <div class="ideal">理想体重：${low.toFixed(1)} ~ ${high.toFixed(1)} kg</div>
+        <div class="disc">本结果仅供参考，不构成医疗建议。如有健康问题请咨询专业医生。</div>
+    </div>`;
+});
+})();
+</script>
+</body>
+</html>
