@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网站地图 | 高速联合</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+  <canvas id="particles"></canvas>
+
+  <nav class="navbar">
+    <a class="nav-brand" href="index.html">
+      <div class="logo">高</div>
+      <span class="brand-text">高速联合</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="download.html">下载</a>
+      <a href="feedback.html">反馈</a>
+      <a href="resources.html">资源</a>
+      <a href="community.html">社群</a>
+      <a href="website.html">网页版</a>
+      <a href="map.html" class="active">网站地图</a>
+    </div>
+  </nav>
+
+  <main class="container" id="top">
+    <section class="section" style="margin-top: 0;">
+      <div class="section-header">
+        <div class="line"></div>
+        <span>网站地图</span>
+        <div class="line"></div>
+      </div>
+
+      <div class="sitemap">
+        <div class="sitemap-group">
+          <a class="sitemap-root" href="index.html">
+            <span class="sitemap-icon">⌂</span>
+            <span>首页</span>
+          </a>
+          <p class="sitemap-desc">官方网站入口 · 欢迎页 · 快捷导航</p>
+        </div>
+
+        <div class="sitemap-group">
+          <div class="sitemap-root static">
+            <span class="sitemap-icon">↓</span>
+            <span>下载中心</span>
+          </div>
+          <p class="sitemap-desc">智能识别最佳节点 · 双区下载通道</p>
+          <div class="sitemap-children">
+            <a class="sitemap-leaf" href="download.html?region=cn">
+              <span class="dot-cn"></span> 中国区 · GitLink
+            </a>
+            <a class="sitemap-leaf" href="download.html?region=intl">
+              <span class="dot-intl"></span> 国际区 · GitHub
+            </a>
+          </div>
+        </div>
+
+        <div class="sitemap-group">
+          <div class="sitemap-root static">
+            <span class="sitemap-icon">⚠</span>
+            <span>问题反馈</span>
+          </div>
+          <p class="sitemap-desc">提交 Bug · 联系开发者</p>
+          <div class="sitemap-children">
+            <a class="sitemap-leaf" href="feedback.html">
+              <span class="dot-intl"></span> GitHub Issues
+            </a>
+            <a class="sitemap-leaf" href="feedback.html">
+              <span class="dot-cn"></span> GitLink Issues
+            </a>
+            <a class="sitemap-leaf" href="feedback.html">
+              <span class="dot-cn"></span> 邮箱联系
+            </a>
+          </div>
+        </div>
+
+        <div class="sitemap-group">
+          <div class="sitemap-root static">
+            <span class="sitemap-icon">◆</span>
+            <span>资源与指南</span>
+          </div>
+          <p class="sitemap-desc">论坛 · 教程 · 开发文档</p>
+          <div class="sitemap-children">
+            <a class="sitemap-leaf" href="resources.html">
+              <span class="dot-cn"></span> GS-talk 论坛
+            </a>
+            <a class="sitemap-leaf" href="resources.html">
+              <span class="dot-cn"></span> 下载指南
+            </a>
+            <a class="sitemap-leaf" href="resources.html">
+              <span class="dot-intl"></span> 插件制作说明
+            </a>
+          </div>
+        </div>
+
+        <div class="sitemap-group">
+          <div class="sitemap-root static">
+            <span class="sitemap-icon">◈</span>
+            <span>用户社群</span>
+          </div>
+          <p class="sitemap-desc">加入交流 · 获取支持</p>
+          <div class="sitemap-children">
+            <a class="sitemap-leaf" href="community.html">
+              <span class="dot-cn"></span> QQ 交流群
+            </a>
+            <a class="sitemap-leaf" href="community.html">
+              <span class="dot-intl"></span> Discord 社区
+            </a>
+          </div>
+        </div>
+
+        <div class="sitemap-group">
+          <a class="sitemap-root" href="website.html">
+            <span class="sitemap-icon">◐</span>
+            <span>工具箱网页版</span>
+          </a>
+          <p class="sitemap-desc">浏览器直接使用 · 无需安装 · 开发中</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="left">
+      <span class="lamp"></span>
+      系统运行中 · 高速联合
+    </div>
+    <div class="right">
+      &copy; 2022-2026 高速联合有限责任公司 · luck-money-help
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
