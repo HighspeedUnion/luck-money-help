@@ -1,140 +1,127 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>网站地图 | 高速联合</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 风格网站地图</title>
+    <!-- 引入像素风字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 地图容器 */
+        .map-container {
+            position: relative;
+            width: 800px; /* 可以根据需要调整大小 */
+            max-width: 95vw;
+            border: 4px solid #555;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        /* 地图背景图片 */
+        .map-bg {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated; /* 保持像素锐利 */
+            image-rendering: crisp-edges;
+        }
+
+        /* 通用标记点样式 */
+        .marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 2px solid #ffffff;
+            text-shadow: 2px 2px 0 #000;
+            transition: all 0.2s ease-in-out;
+            white-space: nowrap;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* 鼠标悬停效果 */
+        .marker:hover {
+            background-color: rgba(50, 205, 50, 0.9); /* 亮绿色 */
+            border-color: #ffff00; /* 黄色边框 */
+            color: #000000;
+            text-shadow: none;
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 10px #ffff00;
+        }
+
+        /* 左下角版权/出处标注 */
+        .credit {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: #ffffff;
+            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; /* 描边提升可读性 */
+            z-index: 10;
+        }
+
+        .credit a {
+            color: #8ab4f8;
+            text-decoration: none;
+        }
+
+        .credit a:hover {
+            text-decoration: underline;
+        }
+
+        /* 针对移动端稍微缩小字体 */
+        @media (max-width: 600px) {
+            .marker { font-size: 8px; padding: 4px 6px; }
+            .credit { font-size: 6px; }
+        }
+    </style>
 </head>
 <body>
-  <div class="bg-glow"></div>
-  <div class="bg-grid"></div>
-  <canvas id="particles"></canvas>
 
-  <nav class="navbar">
-    <a class="nav-brand" href="index.html">
-      <div class="logo">高</div>
-      <span class="brand-text">高速联合</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">首页</a>
-      <a href="download.html">下载</a>
-      <a href="feedback.html">反馈</a>
-      <a href="resources.html">资源</a>
-      <a href="community.html">社群</a>
-      <a href="website.html">网页版</a>
-      <a href="map.html" class="active">网站地图</a>
+    <div class="map-container">
+        <!-- 请确保这里的图片名称和你保存的图片名称一致，例如 map.png -->
+        <img src="map.png" alt="Minecraft Map" class="map-bg">
+
+        <!-- 标记点：你可以通过修改 top 和 left 的百分比来调整位置 -->
+        
+        <!-- 1. 退出官网 (右上角岛屿) -->
+        <a href="hao.bing.com" class="marker" style="top: 18%; left: 78%;">退出官网</a>
+
+        <!-- 2. 简介 (地图中心) -->
+        <a href="./my.html" class="marker" style="top: 50%; left: 45%;">简介</a>
+
+        <!-- 3. 文档 (左上角) -->
+        <a href="./note.html" class="marker" style="top: 25%; left: 20%;">文档</a>
+
+        <!-- 4. 反馈 (下方中间) -->
+        <a href="./feedback.html" class="marker" style="top: 80%; left: 55%;">反馈</a>
+
+        <!-- 5. 网页版工具 (右侧大陆) -->
+        <a href="./websitehelp.html" class="marker" style="top: 55%; left: 85%;">网页版工具</a>
+
+        <!-- 6. 下载 (左下角雪地) -->
+        <a href="./download.html" class="marker" style="top: 85%; left: 15%;">下载</a>
+
+        <!-- 左下角出处标注 -->
+        <div class="credit">
+            图片来自于: <a href="https://zh.minecraft.wiki/w/%E5%9C%B0%E5%9B%BE#/media/File:12w34b_-_map_zoom1.png" target="_blank">Minecraft Wiki</a>
+        </div>
     </div>
-  </nav>
 
-  <main class="container" id="top">
-    <section class="section" style="margin-top: 0;">
-      <div class="section-header">
-        <div class="line"></div>
-        <span>网站地图</span>
-        <div class="line"></div>
-      </div>
-
-      <div class="sitemap">
-        <div class="sitemap-group">
-          <a class="sitemap-root" href="index.html">
-            <span class="sitemap-icon">⌂</span>
-            <span>首页</span>
-          </a>
-          <p class="sitemap-desc">官方网站入口 · 欢迎页 · 快捷导航</p>
-        </div>
-
-        <div class="sitemap-group">
-          <div class="sitemap-root static">
-            <span class="sitemap-icon">↓</span>
-            <span>下载中心</span>
-          </div>
-          <p class="sitemap-desc">智能识别最佳节点 · 双区下载通道</p>
-          <div class="sitemap-children">
-            <a class="sitemap-leaf" href="download.html?region=cn">
-              <span class="dot-cn"></span> 中国区 · GitLink
-            </a>
-            <a class="sitemap-leaf" href="download.html?region=intl">
-              <span class="dot-intl"></span> 国际区 · GitHub
-            </a>
-          </div>
-        </div>
-
-        <div class="sitemap-group">
-          <div class="sitemap-root static">
-            <span class="sitemap-icon">⚠</span>
-            <span>问题反馈</span>
-          </div>
-          <p class="sitemap-desc">提交 Bug · 联系开发者</p>
-          <div class="sitemap-children">
-            <a class="sitemap-leaf" href="feedback.html">
-              <span class="dot-intl"></span> GitHub Issues
-            </a>
-            <a class="sitemap-leaf" href="feedback.html">
-              <span class="dot-cn"></span> GitLink Issues
-            </a>
-            <a class="sitemap-leaf" href="feedback.html">
-              <span class="dot-cn"></span> 邮箱联系
-            </a>
-          </div>
-        </div>
-
-        <div class="sitemap-group">
-          <div class="sitemap-root static">
-            <span class="sitemap-icon">◆</span>
-            <span>资源与指南</span>
-          </div>
-          <p class="sitemap-desc">论坛 · 教程 · 开发文档</p>
-          <div class="sitemap-children">
-            <a class="sitemap-leaf" href="resources.html">
-              <span class="dot-cn"></span> GS-talk 论坛
-            </a>
-            <a class="sitemap-leaf" href="resources.html">
-              <span class="dot-cn"></span> 下载指南
-            </a>
-            <a class="sitemap-leaf" href="resources.html">
-              <span class="dot-intl"></span> 插件制作说明
-            </a>
-          </div>
-        </div>
-
-        <div class="sitemap-group">
-          <div class="sitemap-root static">
-            <span class="sitemap-icon">◈</span>
-            <span>用户社群</span>
-          </div>
-          <p class="sitemap-desc">加入交流 · 获取支持</p>
-          <div class="sitemap-children">
-            <a class="sitemap-leaf" href="community.html">
-              <span class="dot-cn"></span> QQ 交流群
-            </a>
-            <a class="sitemap-leaf" href="community.html">
-              <span class="dot-intl"></span> Discord 社区
-            </a>
-          </div>
-        </div>
-
-        <div class="sitemap-group">
-          <a class="sitemap-root" href="website.html">
-            <span class="sitemap-icon">◐</span>
-            <span>工具箱网页版</span>
-          </a>
-          <p class="sitemap-desc">浏览器直接使用 · 无需安装 · 开发中</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="left">
-      <span class="lamp"></span>
-      系统运行中 · 高速联合
-    </div>
-    <div class="right">
-      &copy; 2022-2026 高速联合有限责任公司 · luck-money-help
-    </div>
-  </footer>
-
-  <script src="main.js"></script>
 </body>
 </html>
