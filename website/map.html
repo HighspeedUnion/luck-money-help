@@ -1,311 +1,122 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>下载中心 | 高速联合</title>
-  
-  <!-- 标签页图标 -->
-  <link rel="icon" type="image/png" href="logo.png">
-  
-  <style>
-    /* ====== 基础重置与背景 ====== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: #05080c; /* 深色背景 */
-      color: #e2e8f0;
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
-    /* 背景光晕 */
-    .bg-glow {
-      position: fixed;
-      top: -20%; left: -10%; width: 60%; height: 60%;
-      background: radial-gradient(circle, rgba(0, 255, 100, 0.08) 0%, transparent 70%);
-      z-index: 0;
-      pointer-events: none;
-    }
-    /* 背景网格 */
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 50px 50px;
-      z-index: 0;
-      pointer-events: none;
-    }
-    /* 粒子画布 */
-    #particles {
-      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.5;
-    }
-
-    /* ====== 导航栏 ====== */
-    .navbar {
-      position: relative; z-index: 10;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 15px 40px;
-      background: rgba(5, 8, 12, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0, 255, 100, 0.1);
-    }
-    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; }
-    .logo {
-      width: 32px; height: 32px; background: #00ff64; color: #000;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 6px; font-weight: bold; font-size: 16px;
-    }
-    .brand-text { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; }
-    .nav-links { display: flex; gap: 20px; }
-    .nav-links a { color: #a0a0a0; text-decoration: none; font-size: 0.95rem; transition: 0.2s; }
-    .nav-links a:hover, .nav-links a.active { color: #00ff64; }
-
-    /* ====== 主体容器 ====== */
-    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 5; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站地图</title>
     
-    .section-header {
-      display: flex; align-items: center; justify-content: center; gap: 15px;
-      margin-bottom: 30px; color: #00ff64; font-size: 1.3rem; font-weight: 500;
-    }
-    .section-header .line { height: 1px; width: 60px; background: linear-gradient(90deg, transparent, #00ff64, transparent); }
+    <!-- 网站图标 (带有 v=3 防缓存) -->
+    <link rel="icon" type="image/png" href="https://gaosuliansi.us.ci/map_32.png?v=3">
+    <link rel="shortcut icon" type="image/png" href="https://gaosuliansi.us.ci/map_32.png?v=3">
+    
+    <!-- 引入像素风字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    /* ====== 卡片网格布局 ====== */
-    .download-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 桌面端3列，2行共6个 */
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-    @media (max-width: 900px) { .download-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 600px) { .download-grid { grid-template-columns: 1fr; } }
+        /* 地图容器：锁定正方形，防止图片加载慢导致页面崩溃 */
+        .map-container {
+            position: relative;
+            width: 800px; 
+            max-width: 95vw;
+            aspect-ratio: 1 / 1; 
+            border: 4px solid #555;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            background-color: #333;
+        }
 
-    /* ====== 单个卡片样式 ====== */
-    .download-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 20px;
-      display: flex; flex-direction: column; gap: 15px;
-      transition: all 0.3s ease;
-    }
-    .download-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 255, 100, 0.1);
-      border-color: rgba(0, 255, 100, 0.3);
-    }
-    .card-header { display: flex; align-items: center; gap: 12px; }
-    .card-icon {
-      width: 42px; height: 42px;
-      background: rgba(0, 255, 100, 0.1); border-radius: 8px;
-      display: flex; align-items: center; justify-content: center; font-size: 20px;
-      overflow: hidden; /* 确保图标超出范围时被隐藏 */
-    }
-    .card-title { font-size: 1.15rem; font-weight: 600; color: #fff; }
-    .card-desc {
-      color: #a0a0a0; font-size: 0.9rem; flex-grow: 1; line-height: 1.5;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.1); padding-bottom: 12px;
-    }
-    .card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btn-primary {
-      flex: 1; background: #00ff64; color: #000; text-align: center;
-      padding: 8px 10px; border-radius: 6px; text-decoration: none;
-      font-size: 0.85rem; font-weight: bold; transition: 0.2s;
-    }
-    .btn-primary:hover { background: #00cc50; }
-    .btn-secondary {
-      flex: 1; background: rgba(255, 255, 255, 0.1); color: #fff; text-align: center;
-      padding: 8px 10px; border-radius: 6px; text-decoration: none;
-      font-size: 0.85rem; transition: 0.2s;
-    }
-    .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+        /* 地图背景图片 */
+        .map-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            image-rendering: pixelated; 
+            image-rendering: crisp-edges;
+            z-index: 1; 
+        }
 
-    /* ====== 分页控件 ====== */
-    .pagination {
-      display: flex; justify-content: center; align-items: center;
-      gap: 20px; margin-top: 20px; padding-bottom: 40px;
-    }
-    .page-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff; padding: 8px 24px; border-radius: 6px;
-      cursor: pointer; transition: 0.2s; font-size: 0.9rem;
-    }
-    .page-btn:hover:not(:disabled) {
-      background: rgba(0, 255, 100, 0.2); border-color: #00ff64; color: #00ff64;
-    }
-    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-    .page-info { color: #a0a0a0; font-size: 0.9rem; }
+        /* 标记点 */
+        .marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            padding: 8px 12px;
+            text-decoration: none;
+            border: 2px solid #ffffff;
+            text-shadow: 2px 2px 0 #000;
+            transition: all 0.2s ease-in-out;
+            white-space: nowrap;
+            cursor: pointer;
+            z-index: 10; 
+        }
 
-    /* ====== 页脚 ====== */
-    .footer {
-      position: relative; z-index: 10;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 20px 40px;
-      background: rgba(5, 8, 12, 0.8);
-      border-top: 1px solid rgba(0, 255, 100, 0.1);
-      color: #a0a0a0; font-size: 0.85rem;
-    }
-    .footer .lamp {
-      display: inline-block; width: 8px; height: 8px; background: #00ff64;
-      border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px #00ff64;
-    }
-  </style>
+        .marker:hover {
+            background-color: rgba(50, 205, 50, 0.9);
+            border-color: #ffff00;
+            color: #000000;
+            text-shadow: none;
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 10px #ffff00;
+        }
 
-  <!-- 自动刷新脚本 -->
-  <script>
-    if (!sessionStorage.getItem('hasRefreshed')) {
-      sessionStorage.setItem('hasRefreshed', 'true');
-      location.reload();
-    }
-  </script>
+        /* 左下角标注 */
+        .credit {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: #ffffff;
+            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; 
+            z-index: 10;
+        }
+
+        .credit a {
+            color: #8ab4f8;
+            text-decoration: none;
+        }
+
+        .credit a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .marker { font-size: 8px; padding: 4px 6px; }
+            .credit { font-size: 6px; }
+        }
+    </style>
 </head>
 <body>
-  <!-- 背景元素 -->
-  <div class="bg-glow"></div>
-  <div class="bg-grid"></div>
-  <canvas id="particles"></canvas>
 
-  <!-- 导航栏 -->
-  <nav class="navbar">
-    <a class="nav-brand" href="index.html">
-      <div class="logo">高</div>
-      <span class="brand-text">高速联合</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">首页</a>
-      <a href="download.html" class="active">下载</a>
-      <a href="feedback.html">反馈</a>
-      <a href="resources.html">资源</a>
-      <a href="community.html">社群</a>
-      <a href="website.html">网页版</a>
+    <div class="map-container">
+        <img src="https://gaosuliansi.us.ci/map.png" alt="Minecraft Map" class="map-bg">
+
+        <a href="hao.bing.com" class="marker" style="top: 18%; left: 78%;">退出官网</a>
+        <a href="./my.html" class="marker" style="top: 50%; left: 45%;">简介</a>
+        <a href="./note.html" class="marker" style="top: 25%; left: 20%;">文档</a>
+        <a href="./feedback.html" class="marker" style="top: 80%; left: 55%;">反馈</a>
+        <a href="./websitehelp.html" class="marker" style="top: 55%; left: 85%;">网页版工具</a>
+        <a href="./download.html" class="marker" style="top: 85%; left: 15%;">下载</a>
+
+        <div class="credit">
+            图片来自于: <a href="https://zh.minecraft.wiki/w/%E5%9C%B0%E5%9B%BE#/media/File:12w34b_-_map_zoom1.png" target="_blank">Minecraft Wiki</a>
+        </div>
     </div>
-  </nav>
 
-  <!-- 主内容区 -->
-  <main class="container" id="top">
-    <section class="section" id="download">
-      <div class="section-header">
-        <div class="line"></div>
-        <span>下载中心</span>
-        <div class="line"></div>
-      </div>
-
-      <!-- 6个卡片网格布局 -->
-      <div class="download-grid">
-        
-        <!-- ===== 卡片 1 ===== -->
-        <div class="download-card">
-          <div class="card-header">
-            <!-- 已经修复：使用 img 标签引入图标，并自适应填满方块 -->
-            <div class="card-icon">
-              <img src="./download/calulatorlogo.png" alt="硒瓜计算" style="width: 100%; height: 100%; object-fit: cover;">
-            </div> 
-            <div class="card-title">硒瓜计算</div>
-          </div>
-          <div class="card-desc">一款模块化、多主题、多语言的桌面计算器，支持插件扩展。</div>
-          <div class="card-actions">
-            <!-- 已经修改：将 href="#" 改为跳转 ./test.html -->
-            <a href="./test.html" class="btn-primary">下载</a>
-            <a href="./test.html" class="btn-secondary">源代码</a>
-            <a href="./test.html" class="btn-secondary">归档</a>
-          </div>
-        </div>
-
-        <!-- ===== 卡片 2 ===== -->
-        <div class="download-card">
-          <div class="card-header">
-            <div class="card-icon">📦</div> 
-            <div class="card-title">[软件名称 2]</div>
-          </div>
-          <div class="card-desc">[填写软件描述或版本号占位]</div>
-          <div class="card-actions">
-            <a href="./test.html" class="btn-primary">下载</a>
-            <a href="./test.html" class="btn-secondary">源代码</a>
-            <a href="./test.html" class="btn-secondary">归档</a>
-          </div>
-        </div>
-
-        <!-- ===== 卡片 3 ===== -->
-        <div class="download-card">
-          <div class="card-header">
-            <div class="card-icon">📦</div> 
-            <div class="card-title">[软件名称 3]</div>
-          </div>
-          <div class="card-desc">[填写软件描述或版本号占位]</div>
-          <div class="card-actions">
-            <a href="./test.html" class="btn-primary">下载</a>
-            <a href="./test.html" class="btn-secondary">源代码</a>
-            <a href="./test.html" class="btn-secondary">归档</a>
-          </div>
-        </div>
-
-        <!-- ===== 卡片 4 ===== -->
-        <div class="download-card">
-          <div class="card-header">
-            <div class="card-icon">📦</div> 
-            <div class="card-title">[软件名称 4]</div>
-          </div>
-          <div class="card-desc">[填写软件描述或版本号占位]</div>
-          <div class="card-actions">
-            <a href="./test.html" class="btn-primary">下载</a>
-            <a href="./test.html" class="btn-secondary">源代码</a>
-            <a href="./test.html" class="btn-secondary">归档</a>
-          </div>
-        </div>
-
-        <!-- ===== 卡片 5 ===== -->
-        <div class="download-card">
-          <div class="card-header">
-            <div class="card-icon">📦</div> 
-            <div class="card-title">[软件名称 5]</div>
-          </div>
-          <div class="card-desc">[填写软件描述或版本号占位]</div>
-          <div class="card-actions">
-            <a href="./test.html" class="btn-primary">下载</a>
-            <a href="./test.html" class="btn-secondary">源代码</a>
-            <a href="./test.html" class="btn-secondary">归档</a>
-          </div>
-        </div>
-
-        <!-- ===== 卡片 6 ===== -->
-        <div class="download-card">
-          <div class="card-header">
-            <div class="card-icon">📦</div> 
-            <div class="card-title">[软件名称 6]</div>
-          </div>
-          <div class="card-desc">[填写软件描述或版本号占位]</div>
-          <div class="card-actions">
-            <a href="./test.html" class="btn-primary">下载</a>
-            <a href="./test.html" class="btn-secondary">源代码</a>
-            <a href="./test.html" class="btn-secondary">归档</a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 分页控件 -->
-      <div class="pagination">
-        <button class="page-btn" id="prevPage">← 上一页</button>
-        <span class="page-info">第 1 / 1 页</span>
-        <button class="page-btn" id="nextPage" disabled>下一页 →</button>
-      </div>
-
-    </section>
-  </main>
-
-  <!-- 页脚 -->
-  <footer class="footer">
-    <div class="left">
-      <span class="lamp"></span>
-      你可能需要刷新页面才能看到最新内容
-    </div>
-    <div class="right">
-      &copy; 2022-2026 高速联合有限责任公司
-    </div>
-  </footer>
-
-  <script src="main.js"></script>
 </body>
 </html>
