@@ -103,10 +103,10 @@
       background: rgba(0, 255, 100, 0.1); border-radius: 8px;
       display: flex; align-items: center; justify-content: center; 
       font-size: 20px;
-      overflow: hidden; /* 非常重要：防止图片撑破方块导致文字重叠 */
+      overflow: hidden; /* 防止图片撑破方块 */
       flex-shrink: 0; /* 防止图标被挤压 */
     }
-    /* 统一处理卡片里的图片，填满容器 */
+    /* 图片自适应填满容器 */
     .card-icon img {
       width: 100%; height: 100%; object-fit: cover; display: block;
     }
@@ -207,6 +207,7 @@
         <div class="download-card">
           <div class="card-header">
             <div class="card-icon">
+              <!-- 这里的路径就是你截图里的名字，直接用 img 标签引用 -->
               <img src="./download/calculatorlogo.png" alt="硒瓜计算">
             </div> 
             <div class="card-title">硒瓜计算</div>
@@ -222,10 +223,7 @@
         <!-- ===== 卡片 2 ===== -->
         <div class="download-card">
           <div class="card-header">
-            <div class="card-icon">
-              <!-- 暂时用 emoji 占位，如果有图就换成：<img src="./download/你的图.png" alt="名字"> -->
-              📦
-            </div> 
+            <div class="card-icon">📦</div> 
             <div class="card-title">[软件名称 2]</div>
           </div>
           <div class="card-desc">[填写软件描述或版本号占位]</div>
@@ -239,9 +237,7 @@
         <!-- ===== 卡片 3 ===== -->
         <div class="download-card">
           <div class="card-header">
-            <div class="card-icon">
-              📦
-            </div> 
+            <div class="card-icon">📦</div> 
             <div class="card-title">[软件名称 3]</div>
           </div>
           <div class="card-desc">[填写软件描述或版本号占位]</div>
@@ -255,9 +251,7 @@
         <!-- ===== 卡片 4 ===== -->
         <div class="download-card">
           <div class="card-header">
-            <div class="card-icon">
-              📦
-            </div> 
+            <div class="card-icon">📦</div> 
             <div class="card-title">[软件名称 4]</div>
           </div>
           <div class="card-desc">[填写软件描述或版本号占位]</div>
@@ -271,9 +265,7 @@
         <!-- ===== 卡片 5 ===== -->
         <div class="download-card">
           <div class="card-header">
-            <div class="card-icon">
-              📦
-            </div> 
+            <div class="card-icon">📦</div> 
             <div class="card-title">[软件名称 5]</div>
           </div>
           <div class="card-desc">[填写软件描述或版本号占位]</div>
@@ -287,9 +279,7 @@
         <!-- ===== 卡片 6 ===== -->
         <div class="download-card">
           <div class="card-header">
-            <div class="card-icon">
-              📦
-            </div> 
+            <div class="card-icon">📦</div> 
             <div class="card-title">[软件名称 6]</div>
           </div>
           <div class="card-desc">[填写软件描述或版本号占位]</div>
