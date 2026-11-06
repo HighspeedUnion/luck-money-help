@@ -1,0 +1,25 @@
+{
+  "protocol": "立春1000",
+  "appname": "experise",
+  "version":"1.0.0",
+  "appid": "com.experise.app",
+  "icon": "https://exprise.com/icon/xxxxx.jpeg",
+  "type": "javaAPP",
+  
+  "supported_os": ["Windows", "Ubuntu", "Debian", "Arch", "Mac"],
+  
+  "requirements": {
+    "windows_min": "7",
+    "windows_recommend": "10",
+    "linux_min": "Ubuntu 20.04",
+    "mac_min": "10.15"
+  },
+  
+  "dependencies": ["java25", "java25fx"],
+  
+  "downloads": {
+    "Windows": "https://exprise.com/download/app_win.exe",
+    "Linux": "https://exprise.com/download/app_linux.AppImage",
+    "Mac": "https://exprise.com/download/app_mac.dmg"
+  }
+}
