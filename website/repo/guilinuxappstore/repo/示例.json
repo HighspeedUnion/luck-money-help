@@ -1,6 +1,7 @@
 {
   "protocol": "立春1000",
   "appname": "experise",
+  "version":"1.0.0",
   "appid": "com.experise.app",
   "icon": "https://exprise.com/icon/xxxxx.jpeg",
   "type": "javaAPP",
